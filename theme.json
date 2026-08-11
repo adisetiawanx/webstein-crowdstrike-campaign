@@ -5,7 +5,7 @@
 		"appearanceTools": true,
 		"useRootPaddingAwareAlignments": true,
 		"layout": {
-			"contentSize": "896px",
+			"contentSize": "880px",
 			"wideSize": "1200px"
 		},
 		"color": {
@@ -64,6 +64,7 @@
 		},
 		"typography": {
 			"customFontSize": false,
+			"defaultFontSizes": false,
 			"dropCap": false,
 			"lineHeight": true,
 			"fluid": true,
@@ -94,32 +95,32 @@
 				{
 					"slug": "medium",
 					"name": "Body",
-					"size": "1.25rem",
-					"fluid": { "min": "1.0625rem", "max": "1.25rem" }
+					"size": "1.375rem",
+					"fluid": { "min": "1.125rem", "max": "1.375rem" }
 				},
 				{
 					"slug": "large",
 					"name": "Lead",
-					"size": "1.5rem",
-					"fluid": { "min": "1.1875rem", "max": "1.5rem" }
+					"size": "1.625rem",
+					"fluid": { "min": "1.25rem", "max": "1.625rem" }
 				},
 				{
 					"slug": "x-large",
 					"name": "Heading small",
-					"size": "2rem",
-					"fluid": { "min": "1.5rem", "max": "2rem" }
+					"size": "2.25rem",
+					"fluid": { "min": "1.625rem", "max": "2.25rem" }
 				},
 				{
 					"slug": "xx-large",
 					"name": "Heading",
-					"size": "3.5rem",
-					"fluid": { "min": "2rem", "max": "3.5rem" }
+					"size": "3.6458rem",
+					"fluid": { "min": "2.125rem", "max": "3.6458rem" }
 				},
 				{
 					"slug": "display",
 					"name": "Display",
-					"size": "5.25rem",
-					"fluid": { "min": "2.75rem", "max": "5.25rem" }
+					"size": "5.8333rem",
+					"fluid": { "min": "2.875rem", "max": "5.8333rem" }
 				}
 			]
 		},
@@ -154,7 +155,7 @@
 		"typography": {
 			"fontFamily": "var(--wp--preset--font-family--sans)",
 			"fontSize": "var(--wp--preset--font-size--medium)",
-			"lineHeight": "1.65",
+			"lineHeight": "1.7",
 			"fontWeight": "400"
 		},
 		"spacing": {

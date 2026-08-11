@@ -68,7 +68,11 @@ video {
    --------------------------------------------------------------------------- */
 
 .csc-masthead {
-	padding-block: var(--wp--preset--spacing--50);
+	/*
+	 * Measured from the mockup: the lockup band sits 140..298 at the 1920px
+	 * export, so 93px of space above it at the 1.5 assumed scale.
+	 */
+	padding-block: 5.8125rem 0;
 	padding-inline: var(--wp--preset--spacing--40);
 	background: var(--wp--preset--color--base);
 }
@@ -77,16 +81,28 @@ video {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: clamp(1rem, 3vw, 2.25rem);
+	/* Mockup gaps either side of the rule are 86px and 79px at 1920, so ~3.5rem. */
+	gap: clamp(1.25rem, 4vw, 3.5rem);
 	max-width: var(--wp--style--global--content-size);
 	margin-inline: auto;
+}
+
+/*
+ * Both marks are aligned on height, which is how the mockup aligns them. Their
+ * widths differ because the two wordmarks are different lengths.
+ */
+.csc-lockup__mark {
+	display: block;
+	width: auto;
+	height: clamp(2rem, 5.5vw, 3.5rem);
 }
 
 .csc-lockup__rule {
 	flex: 0 0 auto;
 	width: 1px;
-	align-self: stretch;
-	min-height: 2.75rem;
+	align-self: center;
+	/* The rule is drawn taller than the wordmarks in the mockup, 159px at 1920. */
+	height: clamp(3.75rem, 9vw, 6.625rem);
 	background: var(--wp--preset--color--ink);
 }
 
