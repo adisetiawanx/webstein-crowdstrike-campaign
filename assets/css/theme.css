@@ -133,7 +133,7 @@ video {
    --------------------------------------------------------------------------- */
 
 .csc-placeholder {
-	display: inline-flex;
+	display: flex;
 	align-items: center;
 	justify-content: center;
 	padding: 0.5rem 1rem;
@@ -152,7 +152,105 @@ video {
 }
 
 /* ---------------------------------------------------------------------------
-   5. Main
+   5. Eyebrow heading
+
+   "SEE THE INTEGRATION IN ACTION". Written in sentence case in the content and
+   uppercased here, so assistive technology reads real words rather than a
+   string of capitals.
+
+   Size is a compromise and is documented in BUILD-NOTES.md: the mockup's cap
+   height implies about 26px, its line width implies about 23px. Outfit's
+   uppercase proportions differ from the mockup typeface, so both cannot be
+   satisfied. 24px sits within a few per cent of each.
+   --------------------------------------------------------------------------- */
+
+.csc-eyebrow {
+	font-size: 1.5rem;
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+/* ---------------------------------------------------------------------------
+   5B. Optional line break
+
+   The mockup breaks "Unified Protection Across / the Modern Attack Surface"
+   onto two lines. That break only makes sense while the heading is wide enough
+   to hold each half on one line. Below that it produces four ragged lines, so
+   the break is dropped and the heading wraps naturally.
+
+   The mockup is flat and does not cover small widths, so this is a build
+   decision. Issue #14.
+   --------------------------------------------------------------------------- */
+
+@media (max-width: 48rem) {
+	.csc-break-wide {
+		display: none;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+   6. Media slot
+
+   The asset for this section has never been supplied. In the mockup the area is
+   occupied by a Canva panel reading "You don't have permission to see this
+   design", because it is a separate Canva design embedded inside the mockup.
+   See issue #5.
+
+   The true aspect ratio is therefore UNKNOWN. 16:9 is used because that is the
+   overwhelmingly common case for a demo video, and it is an assumption, not a
+   measurement. Replace this block with a core Video or Embed block when the
+   real asset arrives.
+   --------------------------------------------------------------------------- */
+
+.csc-media-slot {
+	aspect-ratio: 16 / 9;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 1.5rem;
+	text-align: center;
+}
+
+.csc-media-slot__label {
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.csc-media-slot__note {
+	max-width: 32ch;
+	font-size: 1rem;
+	line-height: 1.5;
+}
+
+/* ---------------------------------------------------------------------------
+   7. Benefit list
+
+   In the mockup the list is centred as a block while its items stay left
+   aligned, so the bullets form a single vertical line. Measured: every item
+   starts at the same x, and the block's centre sits on the page centre.
+   --------------------------------------------------------------------------- */
+
+.csc-benefits {
+	width: fit-content;
+	max-width: 100%;
+	margin-inline: auto;
+	text-align: left;
+	/* Measured item step 81px at the 1920px export, so 54px. */
+	line-height: 1.49;
+}
+
+.csc-benefits li + li {
+	margin-top: 1.1rem;
+}
+
+/* ---------------------------------------------------------------------------
+   8. Main
    --------------------------------------------------------------------------- */
 
 .csc-main {
