@@ -1,0 +1,167 @@
+/*
+ * CrowdStrike Campaign theme styles.
+ *
+ * Colours, type scale and spacing are NOT defined here. They come from
+ * theme.json as CSS custom properties, so the editor and the front end agree.
+ * Reference them as var(--wp--preset--color--brand-red) and so on.
+ *
+ * This file holds only what theme.json cannot express: component styles,
+ * interaction states and responsive behaviour.
+ */
+
+/* ---------------------------------------------------------------------------
+   1. Base
+   --------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+video {
+	max-width: 100%;
+	height: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   2. Focus and skip link
+
+   The mockup is flat and specifies no focus treatment, so this is a build
+   decision recorded in BUILD-NOTES.md. A visible focus ring is not optional.
+   --------------------------------------------------------------------------- */
+
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+	outline: 3px solid var(--wp--preset--color--brand-red);
+	outline-offset: 2px;
+}
+
+.csc-skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 999;
+	padding: 0.75rem 1.25rem;
+	background: var(--wp--preset--color--ink);
+	color: var(--wp--preset--color--base);
+	text-decoration: none;
+}
+
+.csc-skip-link:focus {
+	left: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   3. Masthead and co-brand lockup
+   --------------------------------------------------------------------------- */
+
+.csc-masthead {
+	padding-block: var(--wp--preset--spacing--50);
+	padding-inline: var(--wp--preset--spacing--40);
+	background: var(--wp--preset--color--base);
+}
+
+.csc-lockup {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: clamp(1rem, 3vw, 2.25rem);
+	max-width: var(--wp--style--global--content-size);
+	margin-inline: auto;
+}
+
+.csc-lockup__rule {
+	flex: 0 0 auto;
+	width: 1px;
+	align-self: stretch;
+	min-height: 2.75rem;
+	background: var(--wp--preset--color--ink);
+}
+
+/*
+ * Below the width where the two marks sit comfortably side by side they stack
+ * and the rule becomes horizontal. The mockup does not cover this; build
+ * decision, recorded in BUILD-NOTES.md.
+ */
+@media (max-width: 30rem) {
+	.csc-lockup {
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.csc-lockup__rule {
+		width: 4rem;
+		min-height: 0;
+		height: 1px;
+		align-self: center;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+   4. Placeholders
+
+   Anything marked as a placeholder must look unmistakably unfinished, so it can
+   never be mistaken for approved content in a review.
+   --------------------------------------------------------------------------- */
+
+.csc-placeholder {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.5rem 1rem;
+	border: 2px dashed var(--wp--preset--color--muted);
+	background: repeating-linear-gradient(
+		45deg,
+		#fff8f8,
+		#fff8f8 8px,
+		#ffeeee 8px,
+		#ffeeee 16px
+	);
+	color: var(--wp--preset--color--muted);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: none;
+}
+
+/* ---------------------------------------------------------------------------
+   5. Main
+   --------------------------------------------------------------------------- */
+
+.csc-main {
+	display: block;
+}
+
+.csc-notfound {
+	max-width: var(--wp--style--global--content-size);
+	margin-inline: auto;
+	padding-block: var(--wp--preset--spacing--70);
+	padding-inline: var(--wp--preset--spacing--40);
+	text-align: center;
+}
+
+/* ---------------------------------------------------------------------------
+   6. Reduced motion
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

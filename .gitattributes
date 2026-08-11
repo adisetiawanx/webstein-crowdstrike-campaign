@@ -1,0 +1,8 @@
+# Keep line endings consistent across Windows and Linux checkouts, so the
+# GridPane deploy never differs from local by whitespace alone.
+* text=auto eol=lf
+
+*.woff2 binary
+*.png binary
+*.jpg binary
+*.webp binary

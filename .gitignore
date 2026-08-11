@@ -1,0 +1,36 @@
+# Development-only files. The repo holds the theme itself and nothing else.
+
+# Client design artefacts. Approved mockups, not for a public repo.
+designs/
+
+# Build notes and reports live locally, not in the public repo
+BUILD-NOTES.md
+BUILD-REPORT.md
+MAINTAINER.md
+REPORT.md
+
+# QA tooling. Installed outside the theme, but guard against it landing here.
+node_modules/
+playwright-report/
+test-results/
+.playwright/
+
+# Local environment and secrets. Never commit a real credential.
+.env
+.env.*
+*.local
+credentials.txt
+
+# Editor and OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# Logs and caches
+*.log
+.cache/
+.sass-cache/

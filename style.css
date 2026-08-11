@@ -1,0 +1,23 @@
+/*
+Theme Name: CrowdStrike Campaign
+Theme URI: https://github.com/adisetiawanx/webstein-crowdstrike-campaign
+Author: Webstein
+Author URI: https://webstein.com.au/
+Description: Campaign microsite for the CrowdStrike and Mimecast joint solution. Two pages, a gated lead capture form and campaign tracking. Built for Excelerate Marketing. Native Gutenberg, no page builder.
+Version: 0.1.0
+Requires at least: 6.5
+Tested up to: 6.8
+Requires PHP: 8.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: crowdstrike-campaign
+Tags: one-column, custom-colors, block-styles
+*/
+
+/*
+Design tokens live in theme.json, not here, so that the block editor and the
+front end read the same values. See BUILD-NOTES.md.
+
+Front end styles are in assets/css/theme.css and are enqueued from functions.php.
+This file exists for the theme header and is deliberately kept empty otherwise.
+*/
