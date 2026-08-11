@@ -104,6 +104,19 @@ function csc_language_attributes( string $output ): string {
 add_filter( 'language_attributes', 'csc_language_attributes' );
 
 /**
+ * Ship none of Gravity Forms' own CSS.
+ *
+ * The form is styled from scratch in assets/css/theme.css to match the approved
+ * mockup. Loading the plugin's stylesheet as well would mean overriding it
+ * selector by selector, and would put a stylesheet on the page that the design
+ * never uses. This keeps the front end to the theme's own CSS.
+ *
+ * The trade off is that every state has to be written by hand, including
+ * validation errors. That is done, see section 9 of theme.css.
+ */
+add_filter( 'gform_disable_css', '__return_true' );
+
+/**
  * This is a two page campaign microsite. Comments are not part of it.
  */
 function csc_disable_comments(): bool {
