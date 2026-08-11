@@ -9,7 +9,8 @@ BUILD-REPORT.md
 MAINTAINER.md
 REPORT.md
 
-# QA tooling. Installed outside the theme, but guard against it landing here.
+# QA tooling. Kept locally for the next developer, never deployed.
+qa/
 node_modules/
 playwright-report/
 test-results/

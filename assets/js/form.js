@@ -1,5 +1,14 @@
 /**
- * Carry campaign parameters into the lead. Issue #10.
+ * Front end behaviour for the Request a Demo form.
+ *
+ * Two jobs, both small, both deliberately vanilla. No framework ships to
+ * visitors.
+ *
+ *   1. Carry campaign parameters into the lead. Issue #10.
+ *   2. Stop a second submission while the first is in flight. Issue #14.
+ *
+ * ---------------------------------------------------------------------------
+ * 1. Campaign parameters
  *
  * Gravity Forms already prepopulates the hidden UTM fields straight from the
  * query string. This covers the case that misses: the visitor arrives from a QR
@@ -16,6 +25,37 @@
  */
 (function () {
 	'use strict';
+
+	/* -----------------------------------------------------------------------
+	 * Double submission guard, issue #14.
+	 *
+	 * The form posts normally rather than over AJAX, so an impatient second
+	 * click sends a second request and creates a duplicate lead. The mockup is
+	 * flat and specifies no submitting state, so this is a build decision.
+	 *
+	 * The button is disabled on submit and its label changes, which also gives
+	 * screen reader users confirmation that something happened. It is only
+	 * disabled once the browser has accepted the submission, so a form that
+	 * fails native validation does not end up with a dead button.
+	 * --------------------------------------------------------------------- */
+	document.addEventListener('submit', function (event) {
+		var form = event.target;
+		if (!form || !form.id || form.id.indexOf('gform_') !== 0) {
+			return;
+		}
+
+		var button = form.querySelector('input[type="submit"]');
+		if (!button || button.disabled) {
+			return;
+		}
+
+		// Let the submission leave first, then lock the button.
+		window.setTimeout(function () {
+			button.disabled = true;
+			button.dataset.cscLabel = button.value;
+			button.value = 'Sending...';
+		}, 0);
+	});
 
 	if (typeof cscUtm === 'undefined' || !cscUtm.fields) {
 		return;

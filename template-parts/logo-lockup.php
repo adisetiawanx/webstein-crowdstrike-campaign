@@ -21,41 +21,59 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/*
+ * Two widths each. The mark renders between 32px and 56px tall, so its widest
+ * rendered width is about 311px. Serving only the 2x file meant phones
+ * downloading roughly three times the pixels they could display. Issue #15.
+ */
 $csc_logos = array(
 	array(
-		'file'   => 'crowdstrike-logo.webp',
+		'slug'   => 'crowdstrike',
 		'alt'    => 'CrowdStrike',
-		'width'  => 623,
+		'w1x'    => 311,
+		'w2x'    => 623,
 		'height' => 112,
 	),
 	array(
-		'file'   => 'mimecast-logo.webp',
+		'slug'   => 'mimecast',
 		'alt'    => 'Mimecast',
-		'width'  => 651,
+		'w1x'    => 326,
+		'w2x'    => 651,
 		'height' => 112,
 	),
 );
-?>
-<div class="csc-lockup">
+
+/**
+ * Render one mark of the lockup.
+ *
+ * Guarded because this file is a template part, and a template part can be
+ * included more than once in a request without warning.
+ *
+ * @param array $logo Logo definition.
+ */
+if ( ! function_exists( 'csc_render_logo' ) ) :
+	function csc_render_logo( array $logo ): void {
+	$base = CSC_URI . '/assets/images/' . $logo['slug'] . '-logo';
+	?>
 	<img
 		class="csc-lockup__mark"
-		src="<?php echo esc_url( CSC_URI . '/assets/images/' . $csc_logos[0]['file'] ); ?>"
-		width="<?php echo esc_attr( (string) $csc_logos[0]['width'] ); ?>"
-		height="<?php echo esc_attr( (string) $csc_logos[0]['height'] ); ?>"
-		alt="<?php echo esc_attr( $csc_logos[0]['alt'] ); ?>"
+		src="<?php echo esc_url( $base . '.webp' ); ?>"
+		srcset="<?php echo esc_attr( $base . '-1x.webp ' . $logo['w1x'] . 'w, ' . $base . '.webp ' . $logo['w2x'] . 'w' ); ?>"
+		sizes="(max-width: 30rem) 178px, 311px"
+		width="<?php echo esc_attr( (string) $logo['w2x'] ); ?>"
+		height="<?php echo esc_attr( (string) $logo['height'] ); ?>"
+		alt="<?php echo esc_attr( $logo['alt'] ); ?>"
 		fetchpriority="high"
 		decoding="async"
 	>
+		<?php
+	}
+endif;
+?>
+<div class="csc-lockup">
+	<?php csc_render_logo( $csc_logos[0] ); ?>
 
 	<span class="csc-lockup__rule" aria-hidden="true"></span>
 
-	<img
-		class="csc-lockup__mark"
-		src="<?php echo esc_url( CSC_URI . '/assets/images/' . $csc_logos[1]['file'] ); ?>"
-		width="<?php echo esc_attr( (string) $csc_logos[1]['width'] ); ?>"
-		height="<?php echo esc_attr( (string) $csc_logos[1]['height'] ); ?>"
-		alt="<?php echo esc_attr( $csc_logos[1]['alt'] ); ?>"
-		fetchpriority="high"
-		decoding="async"
-	>
+	<?php csc_render_logo( $csc_logos[1] ); ?>
 </div>

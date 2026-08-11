@@ -53,15 +53,15 @@ function csc_assets(): void {
 	// Only loaded where the form actually is. Issue #10.
 	if ( ! is_page( 'thank-you' ) ) {
 		wp_enqueue_script(
-			'csc-utm',
-			CSC_URI . '/assets/js/utm.js',
+			'csc-form',
+			CSC_URI . '/assets/js/form.js',
 			array(),
 			CSC_VERSION,
 			true
 		);
 
 		wp_localize_script(
-			'csc-utm',
+			'csc-form',
 			'cscUtm',
 			array( 'fields' => csc_utm_field_map() )
 		);
@@ -82,6 +82,58 @@ function csc_preload_font(): void {
 	);
 }
 add_action( 'wp_head', 'csc_preload_font', 1 );
+
+/**
+ * Meta description.
+ *
+ * No SEO plugin is installed on a two page microsite, and Lighthouse correctly
+ * flagged the pages as having no description.
+ *
+ * The wording is NOT written here. It is the client's own approved sentence,
+ * taken verbatim from the Canva mockup for each page, so nothing has been
+ * invented. Excelerate should still review it, since a meta description is
+ * public facing copy. Recorded in REPORT.md.
+ */
+function csc_meta_description(): void {
+	if ( is_page( 'thank-you' ) ) {
+		$description = 'Your request has been successfully submitted. A CrowdStrike and Mimecast security specialist will review your enquiry and contact you.';
+	} elseif ( is_front_page() ) {
+		$description = 'See how CrowdStrike and Mimecast work together to help organisations strengthen cyber resilience, improve threat visibility and respond faster across email, endpoint and the wider attack surface.';
+	} else {
+		return;
+	}
+
+	printf(
+		'<meta name="description" content="%s">' . "\n",
+		esc_attr( $description )
+	);
+}
+add_action( 'wp_head', 'csc_meta_description', 2 );
+
+/**
+ * Keep the Thank You page out of search results.
+ *
+ * It is a form confirmation. It has no value as a landing page, and if it ranks
+ * then people arrive at a "thank you" for something they never submitted.
+ *
+ * This goes through the `wp_robots` filter rather than printing a tag in
+ * wp_head. WordPress already emits its own robots meta, so printing a second
+ * one produces two conflicting tags and search engines are free to pick either.
+ * The first version of this did exactly that and the verification pass caught
+ * it.
+ *
+ * @param array<string, mixed> $robots Robots directives.
+ * @return array<string, mixed>
+ */
+function csc_noindex_thank_you( array $robots ): array {
+	if ( is_page( 'thank-you' ) ) {
+		$robots['noindex'] = true;
+		$robots['follow']  = true;
+	}
+
+	return $robots;
+}
+add_filter( 'wp_robots', 'csc_noindex_thank_you' );
 
 /**
  * Trim front end weight this microsite does not use.
@@ -108,6 +160,61 @@ function csc_dequeue_unused(): void {
 	wp_dequeue_style( 'classic-theme-styles' );
 }
 add_action( 'wp_enqueue_scripts', 'csc_dequeue_unused', 20 );
+
+/**
+ * Drop the Gravity Forms JavaScript this form does not use.
+ *
+ * ONLY `gform_placeholder` is removed. It is a polyfill that gives IE9 support
+ * for the placeholder attribute, which every browser has supported natively for
+ * over a decade.
+ *
+ * DO NOT extend this list without testing. Removing the Gravity Forms theme
+ * framework scripts was tried first, because the plugin's CSS is disabled and
+ * they looked unused. It saved 59KB and it broke the form: submissions stopped
+ * redirecting to the Thank You page and the console threw
+ * "Cannot read properties of undefined (reading 'trigger')". They were put
+ * back. The saving is not worth a form that silently stops working.
+ *
+ * If you touch this, re-run the end to end submission test afterwards. A broken
+ * form here does not look broken, it just quietly stops producing leads.
+ */
+function csc_trim_gravityforms_js(): void {
+	if ( is_admin() ) {
+		return;
+	}
+
+	wp_dequeue_script( 'gform_placeholder' );
+}
+
+/**
+ * Move jQuery out of the document head.
+ *
+ * Lighthouse measured jQuery and jQuery Migrate as the largest render blocking
+ * cost on the page, roughly 600ms on its simulated connection, purely because
+ * WordPress prints them in the head.
+ *
+ * Nothing on this site needs jQuery before first paint. Gravity Forms prints
+ * its own inline scripts in the footer, after this.
+ *
+ * Verified by re-running the end to end form test after the change, because the
+ * last attempt at trimming Gravity Forms' JavaScript broke submissions
+ * silently. If you change this, test the form again.
+ */
+function csc_jquery_to_footer(): void {
+	if ( is_admin() ) {
+		return;
+	}
+
+	foreach ( array( 'jquery', 'jquery-core', 'jquery-migrate' ) as $handle ) {
+		$script = wp_scripts()->query( $handle, 'registered' );
+		if ( $script ) {
+			wp_scripts()->add_data( $handle, 'group', 1 );
+		}
+	}
+}
+add_action( 'wp_enqueue_scripts', 'csc_jquery_to_footer', 100 );
+add_action( 'wp_print_scripts', 'csc_trim_gravityforms_js', 100 );
+add_action( 'wp_print_footer_scripts', 'csc_trim_gravityforms_js', 1 );
 
 /**
  * Australian English document language.
