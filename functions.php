@@ -49,6 +49,23 @@ function csc_assets(): void {
 		array(),
 		CSC_VERSION
 	);
+
+	// Only loaded where the form actually is. Issue #10.
+	if ( ! is_page( 'thank-you' ) ) {
+		wp_enqueue_script(
+			'csc-utm',
+			CSC_URI . '/assets/js/utm.js',
+			array(),
+			CSC_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'csc-utm',
+			'cscUtm',
+			array( 'fields' => csc_utm_field_map() )
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'csc_assets' );
 
@@ -102,6 +119,57 @@ function csc_language_attributes( string $output ): string {
 	return 'lang="en-AU"';
 }
 add_filter( 'language_attributes', 'csc_language_attributes' );
+
+/**
+ * Map UTM parameter names to their Gravity Forms field ids.
+ *
+ * Read from the form itself rather than hard coded, so that rebuilding or
+ * reordering the form cannot silently break campaign tracking. Returns an empty
+ * array if Gravity Forms is not active, which is the correct behaviour: no
+ * form, nothing to populate.
+ *
+ * @return array<string, string>
+ */
+function csc_utm_field_map(): array {
+	if ( ! class_exists( 'GFAPI' ) ) {
+		return array();
+	}
+
+	$form = GFAPI::get_form( 1 );
+	if ( ! $form || empty( $form['fields'] ) ) {
+		return array();
+	}
+
+	$map = array();
+	foreach ( $form['fields'] as $field ) {
+		if ( 'hidden' === $field->type && ! empty( $field->inputName )
+			&& str_starts_with( $field->inputName, 'utm_' ) ) {
+			$map[ $field->inputName ] = (string) $field->id;
+		}
+	}
+
+	return $map;
+}
+
+/**
+ * Add a slug based body class.
+ *
+ * WordPress does not add one for pages, only `page-id-N`, and an id is a poor
+ * thing to hang styles on because it changes between environments. The Thank
+ * You page needs its own background and masthead spacing, so it needs a stable
+ * hook: `page-thank-you`.
+ */
+function csc_body_class( array $classes ): array {
+	if ( is_page() ) {
+		$post = get_queried_object();
+		if ( $post instanceof WP_Post && $post->post_name ) {
+			$classes[] = 'page-' . sanitize_html_class( $post->post_name );
+		}
+	}
+
+	return $classes;
+}
+add_filter( 'body_class', 'csc_body_class' );
 
 /**
  * Ship none of Gravity Forms' own CSS.

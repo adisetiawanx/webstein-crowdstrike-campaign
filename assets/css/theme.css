@@ -486,7 +486,164 @@ video {
 }
 
 /* ---------------------------------------------------------------------------
-   10. Main
+   10. Thank You page, issue #9
+
+   The whole page sits on the surface grey. Values measured from
+   designs/Thank You page.png at the 1920px export, divided by the 1.5 scale.
+   --------------------------------------------------------------------------- */
+
+.page-thank-you {
+	background: var(--wp--preset--color--surface);
+}
+
+.page-thank-you .csc-masthead {
+	/* The lockup sits slightly higher here than on the landing page, 118px
+	   against 140px at the export. */
+	padding-block-start: 4.9375rem;
+	background: transparent;
+}
+
+/* Confirmation tick ------------------------------------------------------- */
+
+.csc-tick {
+	display: block;
+	width: 12.4375rem; /* 199px */
+	height: 12.4375rem;
+	margin: 2rem auto 0;
+	color: var(--wp--preset--color--brand-red-deep);
+}
+
+.csc-tick circle,
+.csc-tick path {
+	fill: none;
+	stroke: currentColor;
+	/* Measured stroke 10px. */
+	stroke-width: 10;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+/* Top block --------------------------------------------------------------- */
+
+.csc-ty-head {
+	text-align: center;
+}
+
+.csc-ty-head h1 {
+	/* Measured 96px, against the landing page h1 at 93px. */
+	margin-block: 4.5rem 0;
+	font-size: clamp(2.875rem, 6.6vw, 6rem);
+}
+
+.csc-ty-lead {
+	margin-block: 2rem 0;
+	font-size: clamp(1.25rem, 2vw, 1.7325rem);
+	font-weight: 700;
+	color: var(--wp--preset--color--ink);
+}
+
+.csc-ty-body {
+	margin-block: 2.875rem 0;
+	font-size: clamp(1.25rem, 2.3vw, 2rem);
+	line-height: 1.5;
+}
+
+/* What happens next ------------------------------------------------------- */
+
+.csc-steps {
+	margin-block: 7.4375rem 0;
+	padding-bottom: 6rem;
+}
+
+.csc-steps__title {
+	margin: 0;
+	font-size: clamp(1.5rem, 3vw, 2.375rem);
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+.csc-steps__list {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	/* Column pitch measured at 406px, block about 1219px. Wider than the
+	   880px text column, which is what the artwork draws. */
+	max-width: 76.1875rem;
+	margin: 3.9375rem auto 0;
+	padding: 0;
+	list-style: none;
+}
+
+.csc-steps__item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-inline: 1.5rem;
+	text-align: center;
+}
+
+/* The rules sit between the columns, not after the last one. */
+.csc-steps__item + .csc-steps__item {
+	border-left: 1px solid var(--wp--preset--color--rule);
+}
+
+.csc-steps__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 8.9375rem; /* 143px */
+	height: 8.9375rem;
+	border-radius: 50%;
+	background: var(--wp--preset--color--body);
+	color: var(--wp--preset--color--base);
+}
+
+.csc-steps__icon svg {
+	width: 55%;
+	height: 55%;
+	fill: currentColor;
+}
+
+.csc-steps__number {
+	margin-block: 2.7rem 0;
+	/* Width implies 83px, glyph height implies 93px. Outfit's digits are
+	   narrower relative to their height than the mockup typeface, so 88px is
+	   the midpoint. Same substitution effect as elsewhere, see issue #18. */
+	font-size: clamp(3rem, 6vw, 5.5rem);
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: -0.015em;
+	color: var(--wp--preset--color--ink);
+}
+
+.csc-steps__text {
+	margin-block: 2.25rem 0;
+	font-size: clamp(1.125rem, 1.9vw, 1.71875rem);
+	line-height: 1.43;
+}
+
+/*
+ * The mockup covers one width only. Below the point where three columns stop
+ * working the steps stack, and the vertical rules become horizontal ones so the
+ * separation is not lost. Build decision, issue #14.
+ */
+@media (max-width: 56rem) {
+	.csc-steps__list {
+		grid-template-columns: 1fr;
+		gap: 3rem;
+		max-width: 30rem;
+	}
+
+	.csc-steps__item + .csc-steps__item {
+		border-left: 0;
+		border-top: 1px solid var(--wp--preset--color--rule);
+		padding-top: 3rem;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+   11. Main
    --------------------------------------------------------------------------- */
 
 .csc-main {
