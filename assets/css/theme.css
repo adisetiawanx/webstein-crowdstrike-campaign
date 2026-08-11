@@ -69,10 +69,11 @@ video {
 
 .csc-masthead {
 	/*
-	 * Measured from the mockup: the lockup band sits 140..298 at the 1920px
-	 * export, so 93px of space above it at the 1.5 assumed scale.
+	 * Measured from the mockup: the lockup band starts at y118 on both pages,
+	 * so 79px of space above it at the 1.5 scale. Confirmed by comparing the
+	 * render against the mockup at matched scale, not by arithmetic alone.
 	 */
-	padding-block: 5.8125rem 0;
+	padding-block: 4.9375rem 0;
 	padding-inline: var(--wp--preset--spacing--40);
 	background: var(--wp--preset--color--base);
 }
@@ -97,12 +98,19 @@ video {
 	height: clamp(2rem, 5.5vw, 3.5rem);
 }
 
+/*
+ * Measured from both mockups, which agree exactly: 7px wide and about 180px
+ * tall at the 1920px export, so 4.7px by 120px. Rounded to 5px so it lands on
+ * whole device pixels instead of blurring.
+ *
+ * This was 1px until Adi spotted it. The original measurement did say 7px, and
+ * it was wrongly dismissed as anti-aliasing.
+ */
 .csc-lockup__rule {
 	flex: 0 0 auto;
-	width: 1px;
+	width: 5px;
 	align-self: center;
-	/* The rule is drawn taller than the wordmarks in the mockup, 159px at 1920. */
-	height: clamp(3.75rem, 9vw, 6.625rem);
+	height: clamp(4.5rem, 9.4vw, 7.5rem);
 	background: var(--wp--preset--color--ink);
 }
 
@@ -263,7 +271,7 @@ video {
 
 .csc-form-band {
 	/* Band top to sub line 40px, button to band bottom about 108px. */
-	padding-block: 1.6875rem 4.5rem;
+	padding-block: 1.125rem 4.5rem;
 }
 
 .csc-form-band > * {
@@ -272,7 +280,8 @@ video {
 }
 
 .csc-form-wrap {
-	margin-top: 3rem; /* sub line baseline to first label, 72px */
+	/* Sub line to first label, measured 72px at the export. */
+	margin-top: 2.375rem;
 }
 
 /*
@@ -305,8 +314,8 @@ video {
 .gform_wrapper .gform_fields {
 	display: grid;
 	grid-template-columns: 1fr;
-	/* Input bottom to next label top, 58px. */
-	gap: 2.4375rem;
+	/* Input bottom to next label top, measured 58px at the export. */
+	gap: 2rem;
 	margin: 0;
 	padding: 0;
 	list-style: none;
@@ -321,8 +330,8 @@ video {
 
 .gform_wrapper .gfield_label {
 	display: block;
-	/* Label bottom to input top, 25px. */
-	margin-bottom: 1.0625rem;
+	/* Label bottom to input top, measured 25px at the export. */
+	margin-bottom: 0.6875rem;
 	color: var(--wp--preset--color--body);
 	font-size: var(--wp--preset--font-size--large);
 	font-weight: 400;
@@ -509,7 +518,7 @@ video {
 	display: block;
 	width: 12.4375rem; /* 199px */
 	height: 12.4375rem;
-	margin: 2rem auto 0;
+	margin-inline: auto;
 	color: var(--wp--preset--color--brand-red-deep);
 }
 
@@ -517,33 +526,48 @@ video {
 .csc-tick path {
 	fill: none;
 	stroke: currentColor;
-	/* Measured stroke 10px. */
-	stroke-width: 10;
+	/*
+	 * Measured: 10px stroke on a 199px circle, so 5% of the diameter. The
+	 * viewBox is 100 units wide, so that is 5, not 10. It was 10, which drew
+	 * the mark at double weight.
+	 */
+	stroke-width: 5;
 	stroke-linecap: round;
 	stroke-linejoin: round;
 }
 
 /* Top block --------------------------------------------------------------- */
 
+/*
+ * The gap below the lockup is padding on the section, not margin on the tick.
+ *
+ * WordPress emits `.wp-block-group.is-layout-constrained > :first-child
+ * { margin-block-start: 0 }` with real class specificity, which beat
+ * `.csc-tick`. The tick ended up flush against the rule, which is what Adi
+ * spotted. Padding on the section cannot be overridden that way.
+ *
+ * Measured: mockup lockup ends at y298, tick starts at y347, so 33px.
+ */
 .csc-ty-head {
+	padding-top: 2.0625rem;
 	text-align: center;
 }
 
 .csc-ty-head h1 {
 	/* Measured 96px, against the landing page h1 at 93px. */
-	margin-block: 4.5rem 0;
+	margin-block: 3.5625rem 0;
 	font-size: clamp(2.875rem, 6.6vw, 6rem);
 }
 
 .csc-ty-lead {
-	margin-block: 2rem 0;
+	margin-block: 0.625rem 0;
 	font-size: clamp(1.25rem, 2vw, 1.7325rem);
 	font-weight: 700;
 	color: var(--wp--preset--color--ink);
 }
 
 .csc-ty-body {
-	margin-block: 2.875rem 0;
+	margin-block: 1.875rem 0;
 	font-size: clamp(1.25rem, 2.3vw, 2rem);
 	line-height: 1.5;
 }
@@ -551,7 +575,7 @@ video {
 /* What happens next ------------------------------------------------------- */
 
 .csc-steps {
-	margin-block: 7.4375rem 0;
+	margin-block: 6.5625rem 0;
 	padding-bottom: 6rem;
 }
 
@@ -570,7 +594,7 @@ video {
 	/* Column pitch measured at 406px, block about 1219px. Wider than the
 	   880px text column, which is what the artwork draws. */
 	max-width: 76.1875rem;
-	margin: 3.9375rem auto 0;
+	margin: 3.5rem auto 0;
 	padding: 0;
 	list-style: none;
 }
@@ -583,9 +607,26 @@ video {
 	text-align: center;
 }
 
-/* The rules sit between the columns, not after the last one. */
-.csc-steps__item + .csc-steps__item {
-	border-left: 1px solid var(--wp--preset--color--rule);
+/*
+ * The rules sit between the columns, not after the last one, and they are a
+ * fixed height rather than the full column height.
+ *
+ * Measured: 4px wide and 343px tall, starting 11px below the top of the icon
+ * circle. This was 1px until the section by section comparison caught it, the
+ * same mistake as the lockup rule.
+ */
+.csc-steps__item {
+	position: relative;
+}
+
+.csc-steps__item + .csc-steps__item::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0.6875rem;
+	width: 4px;
+	height: 21.4375rem;
+	background: var(--wp--preset--color--rule);
 }
 
 .csc-steps__icon {
@@ -636,9 +677,15 @@ video {
 	}
 
 	.csc-steps__item + .csc-steps__item {
-		border-left: 0;
-		border-top: 1px solid var(--wp--preset--color--rule);
 		padding-top: 3rem;
+	}
+
+	.csc-steps__item + .csc-steps__item::before {
+		position: static;
+		display: block;
+		width: 8rem;
+		height: 4px;
+		margin: 0 auto 3rem;
 	}
 }
 

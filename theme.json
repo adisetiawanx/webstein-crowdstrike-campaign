@@ -203,7 +203,7 @@
 		"typography": {
 			"fontFamily": "var(--wp--preset--font-family--sans)",
 			"fontSize": "var(--wp--preset--font-size--medium)",
-			"lineHeight": "1.7",
+			"lineHeight": "1.51",
 			"fontWeight": "400"
 		},
 		"spacing": {
