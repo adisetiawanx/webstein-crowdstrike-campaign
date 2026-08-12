@@ -105,12 +105,29 @@ video {
  * the height above the box centre. That is what the nudge corrects.
  */
 .csc-lockup {
-	display: flex;
+	/*
+	 * Three columns with the outer two equal, so the rule lands on the exact
+	 * horizontal centre of the page.
+	 *
+	 * A flex row centred as a group does NOT do this: the CrowdStrike mark is
+	 * 437px wide against mimecast's 319px, so the group's centre, and with it
+	 * the rule, sits about 60px right of the page centre. Adi spotted it.
+	 */
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
 	align-items: center;
-	justify-content: center;
 	gap: clamp(1rem, 2vw, 27px);
 	max-width: var(--wp--style--global--content-size);
 	margin-inline: auto;
+}
+
+/* Each mark hugs the rule, so the gap either side of it stays equal. */
+.csc-lockup__mark--crowdstrike {
+	justify-self: end;
+}
+
+.csc-lockup__mark--mimecast {
+	justify-self: start;
 }
 
 .csc-lockup__mark {
@@ -148,9 +165,14 @@ video {
  */
 @media (max-width: 30rem) {
 	.csc-lockup {
-		flex-direction: column;
-		align-items: center;
+		grid-template-columns: 1fr;
+		justify-items: center;
 		gap: 1rem;
+	}
+
+	.csc-lockup__mark--crowdstrike,
+	.csc-lockup__mark--mimecast {
+		justify-self: center;
 	}
 
 	.csc-lockup__mark--crowdstrike {
