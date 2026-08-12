@@ -31,9 +31,13 @@
 defined( 'ABSPATH' ) || exit;
 
 /*
- * Two widths each. The mark renders between 32px and 56px tall, so its widest
- * rendered width is about 311px. Serving only the 2x file meant phones
- * downloading roughly three times the pixels they could display. Issue #15.
+ * Two widths each. Serving only the 2x file meant phones downloading roughly
+ * three times the pixels they could display. Issue #15.
+ *
+ * `w1x` is the mark's width at the 56px render height, so it doubles as the
+ * `sizes` value. The two marks are different widths, so `sizes` is computed per
+ * mark rather than shared. It was previously hard coded to 311px, which stopped
+ * being true for CrowdStrike the moment its file changed.
  */
 $csc_logos = array(
 	array(
@@ -62,13 +66,25 @@ $csc_logos = array(
  */
 if ( ! function_exists( 'csc_render_logo' ) ) :
 	function csc_render_logo( array $logo ): void {
-	$base = CSC_URI . '/assets/images/' . $logo['slug'] . '-logo';
-	?>
+		$base = CSC_URI . '/assets/images/' . $logo['slug'] . '-logo';
+		$file = CSC_DIR . '/assets/images/' . $logo['slug'] . '-logo.webp';
+
+		/*
+		 * Cache bust on the file's own modification time.
+		 *
+		 * Logo files get replaced under the same filename, so without this a
+		 * browser that has seen the old one keeps showing it. That happened
+		 * during the build: the file on disk was correct and the page still
+		 * looked wrong. It would happen again the day the official CrowdStrike
+		 * file arrives, and would be blamed on the swap rather than the cache.
+		 */
+		$ver  = file_exists( $file ) ? '?v=' . filemtime( $file ) : '';
+		?>
 	<img
 		class="csc-lockup__mark"
-		src="<?php echo esc_url( $base . '.webp' ); ?>"
-		srcset="<?php echo esc_attr( $base . '-1x.webp ' . $logo['w1x'] . 'w, ' . $base . '.webp ' . $logo['w2x'] . 'w' ); ?>"
-		sizes="(max-width: 30rem) 178px, 311px"
+		src="<?php echo esc_url( $base . '.webp' . $ver ); ?>"
+		srcset="<?php echo esc_attr( $base . '-1x.webp' . $ver . ' ' . $logo['w1x'] . 'w, ' . $base . '.webp' . $ver . ' ' . $logo['w2x'] . 'w' ); ?>"
+		sizes="<?php echo esc_attr( "(max-width: 30rem) " . round( $logo['w1x'] * 32 / 56 ) . "px, " . $logo['w1x'] . "px" ); ?>"
 		width="<?php echo esc_attr( (string) $logo['w2x'] ); ?>"
 		height="<?php echo esc_attr( (string) $logo['height'] ); ?>"
 		alt="<?php echo esc_attr( $logo['alt'] ); ?>"
