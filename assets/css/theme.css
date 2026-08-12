@@ -244,23 +244,21 @@ video {
 
 .csc-video {
 	/*
-	 * The design draws a 550px SQUARE frame here, in both exports and in the
-	 * Canva element itself, 550 x 549. The supplied video is 1920x1080.
+	 * The video's own aspect ratio wins, 16:9, matching the 1920x1080 file.
 	 *
-	 * The frame is kept square so the page rhythm matches the design, and the
-	 * video is contained inside it rather than cropped, because cropping a
-	 * client's video to fit a box is not a call this build should make. That
-	 * leaves letterbox bars, which is normal for video.
+	 * The design draws a 550px square frame, but that is the Canva embed
+	 * placeholder rather than the footage. Forcing the video into it means
+	 * either cropping the sides or letterboxing, and both look wrong. Adi's
+	 * call, and the right one.
 	 *
-	 * If Excelerate would rather the frame matched the footage, change
-	 * aspect-ratio to 16 / 9. Issue #19.
+	 * Full content column width was chosen over the design's 550px because it
+	 * lands at 506px tall against the 549px the design allots the section, so
+	 * the page rhythm is preserved as well. At 550px wide it would have been
+	 * 309px tall and left a large hole.
 	 */
 	display: block;
-	width: 550px;
-	max-width: 100%;
-	margin-inline: auto;
-	aspect-ratio: 1 / 1;
-	object-fit: contain;
+	width: 100%;
+	aspect-ratio: 16 / 9;
 	background: var(--wp--preset--color--ink);
 }
 
