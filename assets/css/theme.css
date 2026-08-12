@@ -207,14 +207,25 @@ video {
    design", because it is a separate Canva design embedded inside the mockup.
    See issue #5.
 
-   The true aspect ratio is therefore UNKNOWN. 16:9 is used because that is the
-   overwhelmingly common case for a demo video, and it is an assumption, not a
-   measurement. Replace this block with a core Video or Embed block when the
-   real asset arrives.
+   The frame is now MEASURED, not assumed. Opening the mockup in the Canva
+   editor on 12 August 2026 showed the embed element is 553 x 551 design units,
+   so it is SQUARE, 1:1, and 79% of the width of the text column. The earlier
+   16:9 was a guess and it was wrong.
+
+   Caveat worth keeping: the embedded design still will not load even for
+   projects@webstein.com.au, so this is the element's stored box rather than the
+   asset itself. If the real asset turns out not to be square, this is the one
+   line to change.
+
+   Replace this block with a core Video or Embed block when the asset arrives.
    --------------------------------------------------------------------------- */
 
 .csc-media-slot {
-	aspect-ratio: 16 / 9;
+	aspect-ratio: 1 / 1;
+	/* 79% of the 880px text column. */
+	width: 43.4375rem;
+	max-width: 100%;
+	margin-inline: auto;
 	display: flex;
 	flex-direction: column;
 	align-items: center;

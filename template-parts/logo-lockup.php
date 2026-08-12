@@ -4,17 +4,17 @@
  *
  * Shared by both pages. Issue #3.
  *
- * PROVENANCE WARNING. These logo files were sourced from the internet, not from
- * a brand kit supplied by the client. Two measured differences from the approved
- * mockup are recorded in BUILD-NOTES.md and flagged in REPORT.md:
+ * MIMECAST is the official mark. Generated from the vector the client supplied
+ * on 12 August 2026, `designs/Black.ai`. Pure #000000 as the mockup draws it,
+ * and its ink ratio of 6.120 matches the mockup's 6.157 to within 0.6%.
  *
- *   1. The Mimecast mark here is navy #00003F. The approved mockup draws it in
- *      black #000000.
- *   2. The CrowdStrike mark here has an ink ratio of 5.56:1. The mockup draws it
- *      at 7.32:1, so it is not the same version of the mark.
+ * CROWDSTRIKE IS NOT. The client did not supply it. This file was sourced from
+ * the internet and is a different version of the mark: its ink ratio is 5.56:1
+ * where the mockup draws 7.32:1, which means the swoosh is proportionally
+ * larger, so at a matched height the wordmark reads smaller than the design.
+ * There is no scale that fixes both. Still outstanding, see issue #19.
  *
- * Both are aligned on height, which is how the mockup aligns them. Replace both
- * files with the official assets as soon as Excelerate supplies them.
+ * The two marks are aligned on height, which is how the mockup aligns them.
  *
  * @package crowdstrike-campaign
  */
@@ -37,8 +37,8 @@ $csc_logos = array(
 	array(
 		'slug'   => 'mimecast',
 		'alt'    => 'Mimecast',
-		'w1x'    => 326,
-		'w2x'    => 651,
+		'w1x'    => 343,
+		'w2x'    => 685,
 		'height' => 112,
 	),
 );
