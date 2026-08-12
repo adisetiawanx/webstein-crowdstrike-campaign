@@ -43,9 +43,19 @@ video {
    decision recorded in BUILD-NOTES.md. A visible focus ring is not optional.
    --------------------------------------------------------------------------- */
 
-:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+:where(a, button, input, textarea, select, video, [tabindex]):focus-visible {
 	outline: 3px solid var(--wp--preset--color--brand-red);
 	outline-offset: 2px;
+}
+
+/*
+ * The video element itself takes focus before its native controls do, and
+ * without this it took focus silently. Caught by the keyboard pass in
+ * qa/verify.js, which is exactly what that pass is for.
+ */
+.csc-video:focus-visible {
+	outline: 3px solid var(--wp--preset--color--brand-red);
+	outline-offset: 3px;
 }
 
 .csc-skip-link {
@@ -200,51 +210,29 @@ video {
 }
 
 /* ---------------------------------------------------------------------------
-   6. Media slot
+   6. Integration video, issue #19
 
-   The asset for this section has never been supplied. In the mockup the area is
-   occupied by a Canva panel reading "You don't have permission to see this
-   design", because it is a separate Canva design embedded inside the mockup.
-   See issue #5.
+   The asset finally arrived on 12 August 2026: "CS Microsite Video - NEW Next
+   Gen SIEM Video", 1920x1080, 29 seconds, with an audio track.
 
-   The frame is now MEASURED, not assumed. Opening the mockup in the Canva
-   editor on 12 August 2026 showed the embed element is 553 x 551 design units,
-   so it is SQUARE, 1:1, and 79% of the width of the text column. The earlier
-   16:9 was a guess and it was wrong.
+   NOTE ON THE ASPECT RATIO. This was built at 16:9, then "corrected" to square
+   after the Canva editor reported the embed element as 553 x 551 units, then
+   put back to 16:9 when the real file turned out to be 1920x1080. The square
+   was Canva's own placeholder box for a design it could not load, not the
+   frame. Trust the asset over the placeholder.
 
-   Caveat worth keeping: the embedded design still will not load even for
-   projects@webstein.com.au, so this is the element's stored box rather than the
-   asset itself. If the real asset turns out not to be square, this is the one
-   line to change.
-
-   Replace this block with a core Video or Embed block when the asset arrives.
+   It is NOT autoplayed. It carries sound, so browsers would block it anyway,
+   and a campaign page that starts talking at you is hostile. It is also
+   preload="metadata" rather than "auto", because 5.3MB downloaded on every page
+   view would undo the entire performance budget. Only the poster loads up
+   front.
    --------------------------------------------------------------------------- */
 
-.csc-media-slot {
-	aspect-ratio: 1 / 1;
-	/* 79% of the 880px text column. */
-	width: 43.4375rem;
-	max-width: 100%;
-	margin-inline: auto;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 0.5rem;
-	padding: 1.5rem;
-	text-align: center;
-}
-
-.csc-media-slot__label {
-	font-weight: 700;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-}
-
-.csc-media-slot__note {
-	max-width: 32ch;
-	font-size: 1rem;
-	line-height: 1.5;
+.csc-video {
+	display: block;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	background: var(--wp--preset--color--ink);
 }
 
 /* ---------------------------------------------------------------------------
