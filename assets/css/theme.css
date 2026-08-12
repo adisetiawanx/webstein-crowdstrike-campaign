@@ -79,67 +79,81 @@ video {
 
 .csc-masthead {
 	/*
-	 * Measured from the mockup: the lockup band starts at y118 on both pages,
-	 * so 79px of space above it at the 1.5 scale. Confirmed by comparing the
-	 * render against the mockup at matched scale, not by arithmetic alone.
+	 * Measured from the current export, "CS Microsite Page Mockup.png", which is
+	 * 1366px wide. That is the design's own canvas width, so one pixel there is
+	 * one CSS pixel here and there is no scale factor to argue about.
+	 *
+	 * mimecast is the topmost ink at y121.
 	 */
-	padding-block: 4.9375rem 0;
+	padding-block: 121px 0;
 	padding-inline: var(--wp--preset--spacing--40);
 	background: var(--wp--preset--color--base);
 }
 
+/*
+ * The two marks are NOT the same height, and they are not centred on each
+ * other. The client changed this: CrowdStrike is 60px tall, mimecast 52px, and
+ * they are aligned on the wordmark baseline. Measured from the export:
+ * CrowdStrike's wordmark bottom lands at y173.7, mimecast's at y172.
+ *
+ * flex-end levels the boxes. CrowdStrike's swoosh hangs below its wordmark, so
+ * it is nudged down by that overhang to bring the two wordmarks level.
+ */
 .csc-lockup {
 	display: flex;
-	align-items: center;
+	align-items: flex-end;
 	justify-content: center;
-	/* Mockup gaps either side of the rule are 86px and 79px at 1920, so ~3.5rem. */
-	gap: clamp(1.25rem, 4vw, 3.5rem);
+	/* Design gaps either side of the rule: 29px and 25px. */
+	gap: clamp(1rem, 2vw, 27px);
 	max-width: var(--wp--style--global--content-size);
 	margin-inline: auto;
 }
 
-/*
- * Both marks are aligned on height, which is how the mockup aligns them. Their
- * widths differ because the two wordmarks are different lengths.
- */
 .csc-lockup__mark {
 	display: block;
 	width: auto;
-	height: clamp(2rem, 5.5vw, 3.5rem);
+}
+
+.csc-lockup__mark--crowdstrike {
+	height: clamp(2.25rem, 4.4vw, 60px);
+	/* Swoosh overhang below the wordmark baseline, 15px of the 60px height. */
+	margin-bottom: -15px;
+}
+
+.csc-lockup__mark--mimecast {
+	height: clamp(1.95rem, 3.8vw, 52px);
 }
 
 /*
- * Measured from both mockups, which agree exactly: 7px wide and about 180px
- * tall at the 1920px export, so 4.7px by 120px. Rounded to 5px so it lands on
- * whole device pixels instead of blurring.
- *
- * This was 1px until Adi spotted it. The original measurement did say 7px, and
- * it was wrongly dismissed as anti-aliasing.
+ * Measured from the current export: 3px wide, 52px tall, black. It was 5 by 120
+ * against the previous export, which the client has since changed.
  */
 .csc-lockup__rule {
 	flex: 0 0 auto;
-	width: 5px;
-	align-self: center;
-	height: clamp(4.5rem, 9.4vw, 7.5rem);
+	width: 3px;
+	height: clamp(2rem, 3.8vw, 52px);
 	background: var(--wp--preset--color--ink);
 }
 
 /*
- * Below the width where the two marks sit comfortably side by side they stack
- * and the rule becomes horizontal. The mockup does not cover this; build
- * decision, recorded in BUILD-NOTES.md.
+ * Below the width where the two marks sit side by side they stack and the rule
+ * turns horizontal. The design covers one width only, so this is a build
+ * decision. Issue #14.
  */
 @media (max-width: 30rem) {
 	.csc-lockup {
 		flex-direction: column;
+		align-items: center;
 		gap: 1rem;
+	}
+
+	.csc-lockup__mark--crowdstrike {
+		margin-bottom: 0;
 	}
 
 	.csc-lockup__rule {
 		width: 4rem;
-		min-height: 0;
-		height: 1px;
-		align-self: center;
+		height: 3px;
 	}
 }
 
@@ -183,7 +197,7 @@ video {
    --------------------------------------------------------------------------- */
 
 .csc-eyebrow {
-	font-size: 1.5rem;
+	font-size: 1.575rem;
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: 0.02em;
@@ -229,9 +243,24 @@ video {
    --------------------------------------------------------------------------- */
 
 .csc-video {
+	/*
+	 * The design draws a 550px SQUARE frame here, in both exports and in the
+	 * Canva element itself, 550 x 549. The supplied video is 1920x1080.
+	 *
+	 * The frame is kept square so the page rhythm matches the design, and the
+	 * video is contained inside it rather than cropped, because cropping a
+	 * client's video to fit a box is not a call this build should make. That
+	 * leaves letterbox bars, which is normal for video.
+	 *
+	 * If Excelerate would rather the frame matched the footage, change
+	 * aspect-ratio to 16 / 9. Issue #19.
+	 */
 	display: block;
-	width: 100%;
-	aspect-ratio: 16 / 9;
+	width: 550px;
+	max-width: 100%;
+	margin-inline: auto;
+	aspect-ratio: 1 / 1;
+	object-fit: contain;
 	background: var(--wp--preset--color--ink);
 }
 
@@ -248,12 +277,21 @@ video {
 	max-width: 100%;
 	margin-inline: auto;
 	text-align: left;
-	/* Measured item step 81px at the 1920px export, so 54px. */
-	line-height: 1.49;
-}
-
-.csc-benefits li + li {
-	margin-top: 1.1rem;
+	/*
+	 * The design runs a uniform 58px line rhythm through the list, the same step
+	 * inside a wrapped item as between items. Measured from the current 1366px
+	 * export.
+	 *
+	 * It has to be line-height rather than margins, because the step is the same
+	 * INSIDE a wrapped item as between items, and a margin cannot do that.
+	 *
+	 * Trade-off, and it is a real one: a 2.18 line-height leaves half of that
+	 * leading hanging below the final line, which CSS counts and Canva does not.
+	 * The five bullet lines land within 1px of the design; the gap to "Request a
+	 * Demo" below them ends up about 25px larger. Absorbed as far as the section
+	 * padding allows. Better than five wrong lines and one right gap.
+	 */
+	line-height: 2.18;
 }
 
 /* ---------------------------------------------------------------------------
@@ -504,19 +542,46 @@ video {
 	background: var(--wp--preset--color--surface);
 }
 
+/*
+ * The Thank You page draws a DIFFERENT lockup from the landing page, measured
+ * from the current 1366px exports:
+ *
+ *            CrowdStrike   mimecast   rule      band top
+ *   landing  437 x 60      319 x 52   3 x 52    y121
+ *   thankyou 437 x 61      342 x 56   3 x 129   y84
+ *
+ * CrowdStrike is the same on both. mimecast is larger here and the rule is
+ * more than twice as tall. The three are centred on each other rather than
+ * baseline aligned, which is how this page draws them.
+ */
 .page-thank-you .csc-masthead {
-	/* The lockup sits slightly higher here than on the landing page, 118px
-	   against 140px at the export. */
-	padding-block-start: 4.9375rem;
+	padding-block-start: 84px;
 	background: transparent;
+}
+
+.page-thank-you .csc-lockup {
+	align-items: center;
+}
+
+.page-thank-you .csc-lockup__mark--crowdstrike {
+	height: clamp(2.25rem, 4.45vw, 61px);
+	margin-bottom: 0;
+}
+
+.page-thank-you .csc-lockup__mark--mimecast {
+	height: clamp(2.1rem, 4.1vw, 56px);
+}
+
+.page-thank-you .csc-lockup__rule {
+	height: clamp(4rem, 9.44vw, 129px);
 }
 
 /* Confirmation tick ------------------------------------------------------- */
 
 .csc-tick {
 	display: block;
-	width: 12.4375rem; /* 199px */
-	height: 12.4375rem;
+	width: 213px;
+	height: 213px;
 	margin-inline: auto;
 	color: var(--wp--preset--color--brand-red-deep);
 }
@@ -556,19 +621,19 @@ video {
 	/* Measured 96px, against the landing page h1 at 93px. */
 	margin-block: 3.5625rem 0;
 	/* Ink height matched to the mockup: 97px at the 1280px design width. */
-	font-size: clamp(2.875rem, 7.58vw, 6.0625rem);
+	font-size: clamp(2.875rem, 8.1vw, 103.7px);
 }
 
 .csc-ty-lead {
 	margin-block: 0.375rem 0;
-	font-size: clamp(1.25rem, 2.05vw, 1.625rem);
+	font-size: clamp(1.25rem, 2.13vw, 27px);
 	font-weight: 700;
 	color: var(--wp--preset--color--ink);
 }
 
 .csc-ty-body {
 	margin-block: 1.875rem 0;
-	font-size: clamp(1.25rem, 2.52vw, 2rem);
+	font-size: clamp(1.3125rem, 2.82vw, 35.8px);
 	line-height: 1.5;
 }
 
@@ -581,7 +646,7 @@ video {
 
 .csc-steps__title {
 	margin: 0;
-	font-size: clamp(1.5rem, 3.18vw, 2.5rem);
+	font-size: clamp(1.5rem, 3.39vw, 42.7px);
 	font-weight: 700;
 	letter-spacing: 0.02em;
 	text-transform: uppercase;
@@ -591,10 +656,18 @@ video {
 .csc-steps__list {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	/* Column pitch measured at 406px, block about 1219px. Wider than the
-	   880px text column, which is what the artwork draws. */
-	max-width: 76.1875rem;
-	margin: 3.5rem auto 0;
+	/*
+	 * Measured from the current 1366px export: the icon circles span x152..1172
+	 * and the column pitch is 433px, so the block is about 1299px wide. That is
+	 * far wider than the 900px text column, which is what the artwork draws.
+	 *
+	 * It has to break out of the constrained parent to get there. Left at the
+	 * parent's width the columns came out 220px and column 3 wrapped onto four
+	 * lines instead of three.
+	 */
+	width: 1299px;
+	max-width: 100%;
+	margin: 60px auto 0;
 	padding: 0;
 	list-style: none;
 }
@@ -633,8 +706,8 @@ video {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 8.9375rem; /* 143px */
-	height: 8.9375rem;
+	width: 154px;
+	height: 154px;
 	border-radius: 50%;
 	background: var(--wp--preset--color--body);
 	color: var(--wp--preset--color--base);
@@ -647,12 +720,12 @@ video {
 }
 
 .csc-steps__number {
-	margin-block: 2.7rem 0;
+	margin-block: 33px 0;
 	/* Width implies 83px, glyph height implies 93px. Outfit's digits are
 	   narrower relative to their height than the mockup typeface, so 88px is
 	   the midpoint. Same substitution effect as elsewhere, see issue #18. */
 	/* Ink height matched to the mockup: 89.5px at the 1280px design width. */
-	font-size: clamp(3rem, 6.99vw, 5.59rem);
+	font-size: clamp(3rem, 7.53vw, 96.2px);
 	font-weight: 700;
 	line-height: 1;
 	letter-spacing: -0.015em;
@@ -660,15 +733,16 @@ video {
 }
 
 .csc-steps__text {
-	margin-block: 2.25rem 0;
-	font-size: clamp(1.125rem, 2.19vw, 1.75rem);
+	margin-block: 17px 0;
+	font-size: clamp(1.1875rem, 2.36vw, 30.2px);
 	line-height: 1.43;
 	/*
 	 * The measure is narrower than the column. Without it the copy wraps a word
 	 * later than the mockup does, which was only visible once the text was
 	 * corrected to its real size. Mockup's widest column line is 290px.
 	 */
-	max-width: 19rem;
+	/* Widest line the design draws in a column is 333px. */
+	max-width: 340px;
 	margin-inline: auto;
 }
 
@@ -681,6 +755,9 @@ video {
 	.csc-steps__list {
 		grid-template-columns: 1fr;
 		gap: 3rem;
+		/* The explicit desktop width has to be released here, or it overflows
+		   the viewport on a phone. Caught by the verification pass. */
+		width: 100%;
 		max-width: 30rem;
 	}
 

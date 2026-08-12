@@ -81,7 +81,7 @@ if ( ! function_exists( 'csc_render_logo' ) ) :
 		$ver  = file_exists( $file ) ? '?v=' . filemtime( $file ) : '';
 		?>
 	<img
-		class="csc-lockup__mark"
+		class="csc-lockup__mark csc-lockup__mark--<?php echo esc_attr( $logo['slug'] ); ?>"
 		src="<?php echo esc_url( $base . '.webp' . $ver ); ?>"
 		srcset="<?php echo esc_attr( $base . '-1x.webp' . $ver . ' ' . $logo['w1x'] . 'w, ' . $base . '.webp' . $ver . ' ' . $logo['w2x'] . 'w' ); ?>"
 		sizes="<?php echo esc_attr( "(max-width: 30rem) " . round( $logo['w1x'] * 32 / 56 ) . "px, " . $logo['w1x'] . "px" ); ?>"
