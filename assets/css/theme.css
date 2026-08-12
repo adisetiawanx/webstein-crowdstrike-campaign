@@ -495,7 +495,20 @@ video {
 	padding: 0;
 }
 
-.gform_wrapper .gform_footer input[type="submit"] {
+/*
+ * Gravity Forms 3.0 renders the submit control as `<button type="submit">`.
+ * Earlier versions rendered `<input type="submit">`, which is what this file
+ * originally targeted, so the button lost every one of these styles the moment
+ * the plugin was updated.
+ *
+ * Both elements are matched, deliberately. It means a plugin rollback does not
+ * break the design a second time, and it costs nothing.
+ */
+.gform_wrapper .gform_footer input[type="submit"],
+.gform_wrapper .gform_footer button[type="submit"] {
+	/* iOS Safari puts its own rounding and gradient on both of these. */
+	-webkit-appearance: none;
+	appearance: none;
 	box-sizing: border-box;
 	display: block;
 	width: 100%;
@@ -515,17 +528,20 @@ video {
 	transition: background-color 0.15s ease;
 }
 
-.gform_wrapper .gform_footer input[type="submit"]:hover {
+.gform_wrapper .gform_footer input[type="submit"]:hover,
+.gform_wrapper .gform_footer button[type="submit"]:hover {
 	background: #c00b11;
 }
 
-.gform_wrapper .gform_footer input[type="submit"]:focus-visible {
+.gform_wrapper .gform_footer input[type="submit"]:focus-visible,
+.gform_wrapper .gform_footer button[type="submit"]:focus-visible {
 	outline: 3px solid var(--wp--preset--color--ink);
 	outline-offset: 3px;
 }
 
 /* Stops a second submission while the first is still in flight. */
-.gform_wrapper .gform_footer input[type="submit"][disabled] {
+.gform_wrapper .gform_footer input[type="submit"][disabled],
+.gform_wrapper .gform_footer button[type="submit"][disabled] {
 	opacity: 0.65;
 	cursor: progress;
 }
