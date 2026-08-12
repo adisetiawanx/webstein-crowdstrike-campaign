@@ -555,19 +555,20 @@ video {
 .csc-ty-head h1 {
 	/* Measured 96px, against the landing page h1 at 93px. */
 	margin-block: 3.5625rem 0;
-	font-size: clamp(2.875rem, 6.6vw, 6rem);
+	/* Ink height matched to the mockup: 97px at the 1280px design width. */
+	font-size: clamp(2.875rem, 7.58vw, 6.0625rem);
 }
 
 .csc-ty-lead {
-	margin-block: 0.625rem 0;
-	font-size: clamp(1.25rem, 2vw, 1.7325rem);
+	margin-block: 0.375rem 0;
+	font-size: clamp(1.25rem, 2.05vw, 1.625rem);
 	font-weight: 700;
 	color: var(--wp--preset--color--ink);
 }
 
 .csc-ty-body {
 	margin-block: 1.875rem 0;
-	font-size: clamp(1.25rem, 2.3vw, 2rem);
+	font-size: clamp(1.25rem, 2.52vw, 2rem);
 	line-height: 1.5;
 }
 
@@ -580,7 +581,7 @@ video {
 
 .csc-steps__title {
 	margin: 0;
-	font-size: clamp(1.5rem, 3vw, 2.375rem);
+	font-size: clamp(1.5rem, 3.18vw, 2.5rem);
 	font-weight: 700;
 	letter-spacing: 0.02em;
 	text-transform: uppercase;
@@ -650,7 +651,8 @@ video {
 	/* Width implies 83px, glyph height implies 93px. Outfit's digits are
 	   narrower relative to their height than the mockup typeface, so 88px is
 	   the midpoint. Same substitution effect as elsewhere, see issue #18. */
-	font-size: clamp(3rem, 6vw, 5.5rem);
+	/* Ink height matched to the mockup: 89.5px at the 1280px design width. */
+	font-size: clamp(3rem, 6.99vw, 5.59rem);
 	font-weight: 700;
 	line-height: 1;
 	letter-spacing: -0.015em;
@@ -659,8 +661,15 @@ video {
 
 .csc-steps__text {
 	margin-block: 2.25rem 0;
-	font-size: clamp(1.125rem, 1.9vw, 1.71875rem);
+	font-size: clamp(1.125rem, 2.19vw, 1.75rem);
 	line-height: 1.43;
+	/*
+	 * The measure is narrower than the column. Without it the copy wraps a word
+	 * later than the mockup does, which was only visible once the text was
+	 * corrected to its real size. Mockup's widest column line is 290px.
+	 */
+	max-width: 19rem;
+	margin-inline: auto;
 }
 
 /*
