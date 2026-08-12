@@ -9,10 +9,19 @@
  * and its ink ratio of 6.120 matches the mockup's 6.157 to within 0.6%.
  *
  * CROWDSTRIKE IS NOT. The client did not supply it. This file was sourced from
- * the internet and is a different version of the mark: its ink ratio is 5.56:1
- * where the mockup draws 7.32:1, which means the swoosh is proportionally
- * larger, so at a matched height the wordmark reads smaller than the design.
- * There is no scale that fixes both. Still outstanding, see issue #19.
+ * the internet and is a different version of the mark: its ink ratio was 5.56:1
+ * where the mockup draws 7.32:1, because its swoosh is proportionally larger.
+ * At a matched height that made the wordmark read noticeably smaller than the
+ * design.
+ *
+ * WORKAROUND, at Adi's request on 12 August 2026: 32px of the swoosh's tail is
+ * cropped from the bottom of the source, which brings the ink ratio to 7.304
+ * against the mockup's 7.320, so the wordmark now reads at the right size. The
+ * wordmark itself ends 26px above the cut and is untouched.
+ *
+ * This is a modification of someone else's trademark and it is deliberately
+ * temporary. Replace it with the official file, uncropped, as soon as the
+ * client supplies one. See issue #19.
  *
  * The two marks are aligned on height, which is how the mockup aligns them.
  *
@@ -30,8 +39,8 @@ $csc_logos = array(
 	array(
 		'slug'   => 'crowdstrike',
 		'alt'    => 'CrowdStrike',
-		'w1x'    => 311,
-		'w2x'    => 623,
+		'w1x'    => 409,
+		'w2x'    => 818,
 		'height' => 112,
 	),
 	array(
