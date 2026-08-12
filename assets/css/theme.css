@@ -91,19 +91,23 @@ video {
 }
 
 /*
- * The two marks are NOT the same height, and they are not centred on each
- * other. The client changed this: CrowdStrike is 60px tall, mimecast 52px, and
- * they are aligned on the wordmark baseline. Measured from the export:
- * CrowdStrike's wordmark bottom lands at y173.7, mimecast's at y172.
+ * Lockup alignment.
  *
- * flex-end levels the boxes. CrowdStrike's swoosh hangs below its wordmark, so
- * it is nudged down by that overhang to bring the two wordmarks level.
+ * DELIBERATELY NOT following Canva here. The design gives the rule a different
+ * length on each page, 52px on the landing page and 129px on Thank You, and
+ * sits it off centre against the wordmarks. Adi's call, and it is the right
+ * one: one lockup, one rule, centred.
+ *
+ * The marks are centred on their WORDMARKS, not on their image boxes. The
+ * CrowdStrike file's swoosh hangs below its wordmark, so its box centre sits
+ * lower than what the eye reads as the centre. Measured from the file: the
+ * wordmark occupies y11..76 of a 102px tall source, so its centre is 7.4% of
+ * the height above the box centre. That is what the nudge corrects.
  */
 .csc-lockup {
 	display: flex;
-	align-items: flex-end;
+	align-items: center;
 	justify-content: center;
-	/* Design gaps either side of the rule: 29px and 25px. */
 	gap: clamp(1rem, 2vw, 27px);
 	max-width: var(--wp--style--global--content-size);
 	margin-inline: auto;
@@ -116,8 +120,9 @@ video {
 
 .csc-lockup__mark--crowdstrike {
 	height: clamp(2.25rem, 4.4vw, 60px);
-	/* Swoosh overhang below the wordmark baseline, 15px of the 60px height. */
-	margin-bottom: -15px;
+	/* Brings the wordmark's centre onto the row centre, see above. */
+	position: relative;
+	top: 4px;
 }
 
 .csc-lockup__mark--mimecast {
@@ -125,13 +130,14 @@ video {
 }
 
 /*
- * Measured from the current export: 3px wide, 52px tall, black. It was 5 by 120
- * against the previous export, which the client has since changed.
+ * One rule, the same on both pages, centred. 56px reads as a clean divider
+ * beside a 52px wordmark without competing with it.
  */
 .csc-lockup__rule {
 	flex: 0 0 auto;
+	align-self: center;
 	width: 3px;
-	height: clamp(2rem, 3.8vw, 52px);
+	height: clamp(2.25rem, 4.1vw, 56px);
 	background: var(--wp--preset--color--ink);
 }
 
@@ -557,22 +563,18 @@ video {
 	background: transparent;
 }
 
-.page-thank-you .csc-lockup {
-	align-items: center;
-}
-
 .page-thank-you .csc-lockup__mark--crowdstrike {
 	height: clamp(2.25rem, 4.45vw, 61px);
-	margin-bottom: 0;
 }
 
 .page-thank-you .csc-lockup__mark--mimecast {
 	height: clamp(2.1rem, 4.1vw, 56px);
 }
 
-.page-thank-you .csc-lockup__rule {
-	height: clamp(4rem, 9.44vw, 129px);
-}
+/*
+ * The rule is deliberately NOT overridden here. The design makes it 129px on
+ * this page against 52px on the landing page; one consistent rule is better.
+ */
 
 /* Confirmation tick ------------------------------------------------------- */
 
