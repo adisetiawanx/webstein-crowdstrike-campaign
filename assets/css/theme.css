@@ -152,21 +152,37 @@ video {
 }
 
 /*
- * Centre CrowdStrike on its wordmark rather than its image box.
+ * Sit the two marks on a shared BASELINE, which is what the mockup does.
  *
- * The swoosh still hangs below the wordmark in the official export, so the box
- * centre sits below what the eye reads as the centre. Measured from the file:
- * the wordmark occupies y12..83 of 112px, putting its centre 8px, or 7.14%,
- * above the box centre. Mimecast needs no equivalent: its ink fills its box, so
- * its box centre already is its ink centre.
+ * Centring them on their ink instead, which is what this rule used to do, does
+ * not align the baselines: CROWDSTRIKE is all caps, so its ink stops at the cap
+ * height, while mimecast carries a t ascender and a ® that push its ink box
+ * taller than its letters. Equal boxes, centred, leave the CrowdStrike baseline
+ * sitting 17.9% of the mark's height too high. Mika spotted it and drew the two
+ * baselines on 13 August 2026.
  *
- * A percentage translate rather than the old fixed `top: 4px`, because
- * translateY resolves against the element's own height. 4px was right at the
- * 60px render and too much once the height clamps down on narrow screens; this
- * tracks the height automatically.
+ * Measured from the files, as a fraction of the render height:
+ *   CrowdStrike baseline  83/112 = 0.741 from the top of its box
+ *   mimecast  baseline   111/112 = 0.991 from the top of its box
+ *
+ * Measured from `designs/Landing page.png`, the mockup puts the mimecast
+ * baseline 4px below the CrowdStrike one on an 83px mark, 4.82%, which is Canva
+ * imprecision rather than intent. Solving for the shift that reproduces it:
+ *
+ *   0.741 + t = 0.991 - 0.0482  ->  t = 0.202
+ *
+ * That agrees with the mockup read directly: it places the CrowdStrike ink box
+ * 17px lower than the mimecast one, on marks about 83px tall.
+ *
+ * The swoosh therefore hangs well below the shared baseline. That is correct, not
+ * a mistake: the mockup drops it 21px below on an 83px mark, 25%.
+ *
+ * Percentage, not pixels, so it holds at both page sizes and everywhere the
+ * height clamp scales down. The Thank You page renders the lockup larger and
+ * needs no separate figure.
  */
 .csc-lockup__mark--crowdstrike {
-	transform: translateY(7.14%);
+	transform: translateY(20.2%);
 }
 
 /*
