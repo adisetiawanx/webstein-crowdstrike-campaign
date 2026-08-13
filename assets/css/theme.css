@@ -98,20 +98,17 @@ video {
  * sits it off centre against the wordmarks. Adi's call, and it is the right
  * one: one lockup, one rule, centred.
  *
- * The marks are centred on their WORDMARKS, not on their image boxes. The
- * CrowdStrike file's swoosh hangs below its wordmark, so its box centre sits
- * lower than what the eye reads as the centre. Measured from the file: the
- * wordmark occupies y11..76 of a 102px tall source, so its centre is 7.4% of
- * the height above the box centre. That is what the nudge corrects.
+ * The marks are centred on their WORDMARKS, not on their image boxes, which is
+ * what the translate on the CrowdStrike mark below is for.
  */
 .csc-lockup {
 	/*
 	 * Three columns with the outer two equal, so the rule lands on the exact
 	 * horizontal centre of the page.
 	 *
-	 * A flex row centred as a group does NOT do this: the CrowdStrike mark is
-	 * 437px wide against mimecast's 319px, so the group's centre, and with it
-	 * the rule, sits about 60px right of the page centre. Adi spotted it.
+	 * A flex row centred as a group does NOT do this: at the 52px render the
+	 * CrowdStrike mark is 379px wide against mimecast's 319px, so the group's
+	 * centre, and with it the rule, sits off the page centre. Adi spotted it.
 	 */
 	display: grid;
 	grid-template-columns: 1fr auto 1fr;
@@ -135,15 +132,41 @@ video {
 	width: auto;
 }
 
-.csc-lockup__mark--crowdstrike {
-	height: clamp(2.25rem, 4.4vw, 60px);
-	/* Brings the wordmark's centre onto the row centre, see above. */
-	position: relative;
-	top: 4px;
-}
-
+/*
+ * Both marks at the same height.
+ *
+ * This used to be 60px for CrowdStrike against 52px for Mimecast, with a 4px
+ * downward nudge, because the CrowdStrike file was not the official mark and its
+ * swoosh was proportionally larger, so a matched height made its wordmark read
+ * too small. Measured from the landing mockup, the two marks are 616x84 and
+ * 511x83: the design aligns them on height, and the 1px difference is inside the
+ * export's own antialiasing.
+ *
+ * The official export the client supplied on 13 August 2026 is 7.279:1 against
+ * the mockup's 7.333:1, so matched heights now reproduce the design. The nudge
+ * went with it.
+ */
+.csc-lockup__mark--crowdstrike,
 .csc-lockup__mark--mimecast {
 	height: clamp(1.95rem, 3.8vw, 52px);
+}
+
+/*
+ * Centre CrowdStrike on its wordmark rather than its image box.
+ *
+ * The swoosh still hangs below the wordmark in the official export, so the box
+ * centre sits below what the eye reads as the centre. Measured from the file:
+ * the wordmark occupies y12..83 of 112px, putting its centre 8px, or 7.14%,
+ * above the box centre. Mimecast needs no equivalent: its ink fills its box, so
+ * its box centre already is its ink centre.
+ *
+ * A percentage translate rather than the old fixed `top: 4px`, because
+ * translateY resolves against the element's own height. 4px was right at the
+ * 60px render and too much once the height clamps down on narrow screens; this
+ * tracks the height automatically.
+ */
+.csc-lockup__mark--crowdstrike {
+	transform: translateY(7.14%);
 }
 
 /*
@@ -601,10 +624,17 @@ video {
 	background: transparent;
 }
 
-.page-thank-you .csc-lockup__mark--crowdstrike {
-	height: clamp(2.25rem, 4.45vw, 61px);
-}
-
+/*
+ * The lockup is larger on this page, but the two marks still match each other.
+ *
+ * The Thank You mockup draws mimecast 6% smaller than the landing mockup does
+ * while drawing CrowdStrike at the same size, which reads as an inconsistency in
+ * the client's Canva file rather than an intention: 616x85 against 481x78 here,
+ * 616x84 against 511x83 there. This follows the same call already made for the
+ * rule above, one lockup that behaves the same on both pages, and keeps mimecast
+ * at the 56px the design gives it.
+ */
+.page-thank-you .csc-lockup__mark--crowdstrike,
 .page-thank-you .csc-lockup__mark--mimecast {
 	height: clamp(2.1rem, 4.1vw, 56px);
 }

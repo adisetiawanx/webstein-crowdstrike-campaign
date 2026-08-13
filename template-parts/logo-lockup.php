@@ -8,22 +8,22 @@
  * on 12 August 2026, `designs/Black.ai`. Pure #000000 as the mockup draws it,
  * and its ink ratio of 6.120 matches the mockup's 6.157 to within 0.6%.
  *
- * CROWDSTRIKE IS NOT. The client did not supply it. This file was sourced from
- * the internet and is a different version of the mark: its ink ratio was 5.56:1
- * where the mockup draws 7.32:1, because its swoosh is proportionally larger.
- * At a matched height that made the wordmark read noticeably smaller than the
- * design.
+ * CROWDSTRIKE is now official too. Exported from the Canva design on 13 August
+ * 2026 at 1334x186 with real transparency, ink ratio 7.279:1 against the
+ * mockup's 7.333:1, a 0.8% match.
  *
- * WORKAROUND, at Adi's request on 12 August 2026: 32px of the swoosh's tail is
- * cropped from the bottom of the source, which brings the ink ratio to 7.304
- * against the mockup's 7.320, so the wordmark now reads at the right size. The
- * wordmark itself ends 26px above the cut and is untouched.
+ * That retired two workarounds. The previous file was sourced from the internet,
+ * was a different version of the mark at 5.56:1, and had 32px of its swoosh tail
+ * cropped off to force the ratio, which meant shipping a modified trademark. It
+ * also had to be rendered 60px tall against Mimecast's 52px so its wordmark read
+ * at the right size, and carried a 4px nudge to recentre it. All of that is gone.
  *
- * This is a modification of someone else's trademark and it is deliberately
- * temporary. Replace it with the official file, uncropped, as soon as the
- * client supplies one. See issue #19.
+ * The two marks are aligned on height, which is how the mockup aligns them: it
+ * draws them 616x84 and 511x83.
  *
- * The two marks are aligned on height, which is how the mockup aligns them.
+ * Do not take a "cleaner" export from the PNG mockups. Measured, the lockup in
+ * `designs/Landing page.png` gives CrowdStrike only 616px wide, well below the
+ * 1332px the Canva export gives. Export from Canva, not from the PNGs.
  *
  * @package crowdstrike-campaign
  */
@@ -43,8 +43,8 @@ $csc_logos = array(
 	array(
 		'slug'   => 'crowdstrike',
 		'alt'    => 'CrowdStrike',
-		'w1x'    => 409,
-		'w2x'    => 818,
+		'w1x'    => 408,
+		'w2x'    => 815,
 		'height' => 112,
 	),
 	array(
