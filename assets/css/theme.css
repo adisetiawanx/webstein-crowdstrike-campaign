@@ -211,28 +211,18 @@ video {
 /* ---------------------------------------------------------------------------
    4. Placeholders
 
-   Anything marked as a placeholder must look unmistakably unfinished, so it can
-   never be mistaken for approved content in a review.
-   --------------------------------------------------------------------------- */
+   Nothing on either page is a placeholder any more, so the styles that made
+   placeholders look unmistakably unfinished have been removed. The last one was
+   the disclaimer, deleted from the form on 13 August 2026.
 
-.csc-placeholder {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 0.5rem 1rem;
-	border: 2px dashed var(--wp--preset--color--muted);
-	background: repeating-linear-gradient(
-		45deg,
-		#fff8f8,
-		#fff8f8 8px,
-		#ffeeee 8px,
-		#ffeeee 16px
-	);
-	color: var(--wp--preset--color--muted);
-	font-weight: 700;
-	letter-spacing: 0.04em;
-	text-transform: none;
-}
+   The section is kept, empty, so the numbering below it does not shift.
+   functions.php refers to "section 9 of theme.css" and renumbering would quietly
+   make that reference point at the wrong place.
+
+   If a placeholder is ever needed again, style it so it cannot be mistaken for
+   approved content in a client review. That was the rule here and it worked: the
+   disclaimer survived every review precisely because it looked broken.
+   --------------------------------------------------------------------------- */
 
 /* ---------------------------------------------------------------------------
    5. Eyebrow heading
@@ -571,25 +561,19 @@ video {
 
 /* Disclaimer -------------------------------------------------------------- */
 
+/*
+ * KEPT ON PURPOSE, even though nothing carries this class right now.
+ *
+ * The disclaimer was a Gravity Forms HTML field, deleted on 13 August 2026 so
+ * the placeholder wording was not visible in a client demo. Excelerate still owes
+ * us the real wording, and when it arrives it goes back the same way: an HTML
+ * field on form 1 holding `<p class="csc-disclaimer">`. Deleting these two rules
+ * would mean rebuilding them then.
+ */
 .csc-disclaimer {
 	margin: 0;
 	font-size: 1rem;
 	line-height: 1.5;
-}
-
-/* The disclaimer wording has not been supplied, so it must look unfinished. */
-.csc-placeholder-text {
-	padding: 0.75rem 1rem;
-	border: 2px dashed var(--wp--preset--color--muted);
-	background: repeating-linear-gradient(
-		45deg,
-		#fff8f8,
-		#fff8f8 8px,
-		#ffeeee 8px,
-		#ffeeee 16px
-	);
-	color: var(--wp--preset--color--muted);
-	font-weight: 700;
 }
 
 .gform_wrapper .gfield--type-html {
