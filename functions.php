@@ -17,9 +17,12 @@ define( 'CSC_URI', get_template_directory_uri() );
 /**
  * GA4 measurement ID.
  *
- * Deliberately empty. Analytics is on hold pending a decision on whose property
- * to use, client or Webstein. See issue #11. Setting this constant is the only
- * change needed to switch tracking on, no template edits.
+ * Still empty, but no longer undecided. Mika settled it on 13 August 2026: GA4
+ * goes on at launch using Webstein's own GA account, not the client's. That
+ * answers the question issue #11 was open on.
+ *
+ * All that is missing now is the measurement ID itself. Setting this constant is
+ * the only change needed to switch tracking on, no template edits.
  */
 define( 'CSC_GA4_MEASUREMENT_ID', '' );
 
@@ -82,6 +85,36 @@ function csc_preload_font(): void {
 	);
 }
 add_action( 'wp_head', 'csc_preload_font', 1 );
+
+/**
+ * Fallback favicon.
+ *
+ * The site had no icon at all, so browsers drew their own default. Mika flagged
+ * it on 13 August 2026.
+ *
+ * The proper home for this is Settings > Site Identity, and this function stands
+ * aside the moment a Site Icon is set there, so it cannot end up fighting with
+ * one or printing a second icon tag. It exists because the theme can be deployed
+ * by file copy while the database cannot, so shipping the icon in the theme is
+ * the only way to guarantee both environments have one.
+ *
+ * Drawn from the official CrowdStrike export rather than invented: the swoosh
+ * with the C, which is the part of the mark that survives being shrunk.
+ */
+function csc_fallback_favicon(): void {
+	if ( has_site_icon() ) {
+		return;
+	}
+
+	$icon = CSC_URI . '/assets/images/favicon-512.png';
+
+	printf(
+		'<link rel="icon" href="%1$s" sizes="512x512">' . "\n" .
+		'<link rel="apple-touch-icon" href="%1$s">' . "\n",
+		esc_url( $icon )
+	);
+}
+add_action( 'wp_head', 'csc_fallback_favicon', 2 );
 
 /**
  * Meta description.
