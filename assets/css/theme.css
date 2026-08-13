@@ -332,21 +332,39 @@ video {
 	max-width: 100%;
 	margin-inline: auto;
 	text-align: left;
-	/*
-	 * The design runs a uniform 58px line rhythm through the list, the same step
-	 * inside a wrapped item as between items. Measured from the current 1366px
-	 * export.
-	 *
-	 * It has to be line-height rather than margins, because the step is the same
-	 * INSIDE a wrapped item as between items, and a margin cannot do that.
-	 *
-	 * Trade-off, and it is a real one: a 2.18 line-height leaves half of that
-	 * leading hanging below the final line, which CSS counts and Canva does not.
-	 * The five bullet lines land within 1px of the design; the gap to "Request a
-	 * Demo" below them ends up about 25px larger. Absorbed as far as the section
-	 * padding allows. Better than five wrong lines and one right gap.
-	 */
-	line-height: 2.18;
+}
+
+/*
+ * Line rhythm: split into two levers, tightened inside a bullet only.
+ *
+ * The design runs a uniform 58px step through the list, the same inside a
+ * wrapped item as between items, and this used to reproduce it with a single
+ * `line-height: 2.18`. That matched Canva to within 1px and read badly: the two
+ * lines of a wrapped bullet sat 58px apart while the paragraph directly above
+ * them, at the same 26.6px font size, sets its lines 40px apart. The client
+ * asked for it tighter on 13 August 2026 and they were right. Adi's call was to
+ * make it sensible rather than follow Canva here.
+ *
+ * So the two gaps are now controlled separately:
+ *
+ *   1.51  inherited, the theme.json root line-height, so a wrapped bullet now
+ *         reads at exactly the same rhythm as the paragraph above it
+ *   0.67em added between items, which puts the step between bullets back to
+ *         1.51 + 0.67 = 2.18em, the 58px the design draws
+ *
+ * The gap between bullets is therefore UNCHANGED and still matches the design.
+ * Only the wrap inside a bullet moved.
+ *
+ * `em` rather than px because the `large` preset is fluid, clamping between
+ * 1.3125rem and 1.6625rem, so a pixel margin would drift as the font scales.
+ *
+ * Side effect, in our favour: 2.18 left half its leading hanging below the last
+ * line, which CSS counts and Canva does not, and the old note here recorded the
+ * gap to "Request a Demo" landing about 25px too large as a result. At 1.51 that
+ * overhang shrinks by about 9px, so that gap gets closer to the design too.
+ */
+.csc-benefits li + li {
+	margin-top: 0.67em;
 }
 
 /* ---------------------------------------------------------------------------
