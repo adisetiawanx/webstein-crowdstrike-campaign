@@ -10,7 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CSC_VERSION', '0.2.5' );
+define( 'CSC_VERSION', '0.2.6' );
 define( 'CSC_DIR', get_template_directory() );
 define( 'CSC_URI', get_template_directory_uri() );
 

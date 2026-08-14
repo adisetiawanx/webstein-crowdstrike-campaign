@@ -484,26 +484,23 @@ video {
 }
 
 /*
- * Centred as a GROUP here, not on the rule.
+ * The rule sits on the page's horizontal centre. Adi's call, twice now.
  *
- * The rest of the build centres the rule on the page and lets the group sit
- * where it must, which was right while the two marks were close in width. It is
- * wrong now: CrowdStrike renders 435px wide against mimecast's 325px, so
- * centring the rule throws the group about 55px left of the page centre.
+ * The grid from section 3 already does that, with equal `1fr` columns either
+ * side. What it cannot do is hold the new marks inside the 880px content width:
+ * the columns come out 411px each, the CrowdStrike mark is 435px, and
+ * `max-width: 100%` from the global image rule then squeezes it against a fixed
+ * 78px height. Measured, it rendered 421px wide, 3% too narrow.
  *
- * The design agrees. It puts the group's centre at x674 against a page centre of
- * x683, and lets the rule fall 44px right of centre rather than the other way
- * round.
+ * So the width limit goes and the columns take the masthead's full inner width.
+ * The marks still hug the rule, because they keep the `justify-self` from section
+ * 3, and the padding is symmetric, so the rule lands on the page centre.
  *
- * Flex also removes a real bug that the three column grid caused here. Equal
- * `1fr` side columns worked out at 411px each, narrower than the 435px the
- * CrowdStrike mark now needs, and `max-width: 100%` from the global image rule
- * then squeezed it to 421px against a fixed 78px height. The mark was rendering
- * 3% too narrow.
+ * The mockup does the opposite, for the record: it centres the group and lets the
+ * rule fall 44px right of centre. One rule on the page centre is the house call
+ * and it survives the marks changing width, which is what went wrong here before.
  */
 .csc-dark-top .csc-lockup {
-	display: flex;
-	justify-content: center;
 	max-width: none;
 }
 
@@ -526,25 +523,17 @@ video {
 }
 
 /*
- * Stacking, repeated for the landing page.
+ * Stacking, repeated at this section's specificity.
  *
- * The narrow-width block in section 3 cannot reach these. It sits ABOVE this
- * section in the file, and every rule here matches it on specificity, so this
- * section wins on order and the marks stayed side by side with a vertical
- * divider while the rest of the lockup stacked. Found by measuring at 375px:
- * the divider was still 4px by 31px and the baseline shift was still applied.
+ * The narrow-width block in section 3 stacks the lockup and turns the divider
+ * horizontal, but it cannot reach the divider here: it sits ABOVE this section in
+ * the file and `.csc-dark-top .csc-lockup__rule` matches it, so this section wins
+ * on order. Measured at 375px, the divider stayed a 4px by 31px vertical bar
+ * while everything around it stacked.
  *
- * `grid-template-columns` from that block is irrelevant here too, since this
- * lockup is flex.
- *
- * The baseline shift goes entirely: stacked, there is no shared baseline left to
- * correct for.
+ * The baseline shift goes too: stacked, there is no shared baseline to correct.
  */
 @media (max-width: 30rem) {
-	.csc-dark-top .csc-lockup {
-		flex-direction: column;
-	}
-
 	.csc-dark-top .csc-lockup__mark--crowdstrike {
 		transform: none;
 	}
