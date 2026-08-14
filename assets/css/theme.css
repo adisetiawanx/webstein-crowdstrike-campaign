@@ -225,6 +225,307 @@ video {
 }
 
 /* ---------------------------------------------------------------------------
+   3B. Dark top section
+
+   The client redesigned the top section on 14 August 2026: black background,
+   fading out, with artwork bleeding off the top right corner.
+
+   Scoped to `.csc-dark-top`, which functions.php puts on both pages. The landing
+   page came first; the Thank You page followed a few hours later once the client
+   confirmed its top had changed too. Only the landing page has an export, so the
+   Thank You page mirrors it rather than being measured.
+
+   The two pages fade out to different colours, because the Thank You page has
+   always sat on the surface grey rather than white.
+
+   Measured from `designs/FINAL CS Microsite Page Mockup.png`, 1366px wide, so
+   one pixel there is one CSS pixel here.
+   --------------------------------------------------------------------------- */
+
+/*
+ * Black on the body, with the artwork bleeding off the top right corner.
+ *
+ * The body carries it because the artwork is 595px tall and has to cross the
+ * masthead and reach into the hero, and a background image cannot escape the box
+ * it is set on. The masthead alone is only about 180px tall, so it would clip.
+ *
+ * The artwork needs no transparency: it fades to pure black on its own left and
+ * bottom edges, so a plain rectangle sits on black invisibly.
+ *
+ * 577px of artwork on the design's 1366px canvas, hence 42.24%.
+ */
+.csc-dark-top {
+	background-color: #000;
+	background-image: url("../images/hero-graphic.webp");
+	background-repeat: no-repeat;
+	background-position: right top;
+	background-size: 42.24% auto;
+}
+
+/*
+ * The fade to white is tied to the video section, not to a pixel offset.
+ *
+ * The design fades from y846 to y1437. Rendered, the video section runs from
+ * y825 to y1450, so the design's fade is that section's own height give or take
+ * 20px at each end, and it is almost certainly how the design was built.
+ *
+ * Doing it that way rather than with pixel stops on the body matters, and the
+ * first attempt here got it wrong. Pixel stops are correct at exactly one
+ * viewport width. On a phone the page is much taller, the fade still finished at
+ * y1437, and "Unified Protection" began at y1204 while the background was still
+ * mid grey. Its heading is ink black. That is unreadable, and no wider screen
+ * would ever show it.
+ *
+ * Everything after the fade has to declare white, because these sections are
+ * transparent by default and would otherwise show the body's black through.
+ * `.csc-form-band` already sets its own surface colour.
+ */
+/*
+ * These backgrounds go on a pseudo element, not on the sections themselves.
+ *
+ * `.entry-content` is a constrained layout, so its section children are 900px
+ * wide however wide the window is. A background set directly on one paints a
+ * 900px band with the body's black down both sides, all the way to the footer.
+ * `.csc-form-band` is the only section that escapes it, because it is alignfull.
+ *
+ * Measured, not guessed: at a 1920px window the sections report 900px wide
+ * starting at x503, while `.entry-content` itself reports 1905px.
+ *
+ * 100vw includes the scrollbar, so the layer overruns the document by half the
+ * scrollbar width at each edge. `overflow-x: clip` absorbs that, and unlike
+ * `hidden` it does not turn the element into a scroll container.
+ */
+.csc-dark-top .csc-main {
+	overflow-x: clip;
+}
+
+.csc-dark-top .csc-integration,
+.page-thank-you .csc-ty-head {
+	position: relative;
+	/*
+	 * A stacking context, so the layers below cannot fall behind an ancestor's
+	 * background instead of just behind this section's own content.
+	 */
+	z-index: 0;
+}
+
+.csc-dark-top .csc-integration::before,
+.csc-dark-top .csc-integration::after,
+.page-thank-you .csc-ty-head::before,
+.page-thank-you .csc-ty-head::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	width: 100vw;
+	transform: translateX(-50%);
+	z-index: -1;
+}
+
+/* The fade itself, over the height of this section. */
+.csc-dark-top .csc-integration::before,
+.page-thank-you .csc-ty-head::before {
+	top: 0;
+	bottom: 0;
+}
+
+/*
+ * Everything BELOW the fade, carried by one layer rather than per section.
+ *
+ * The sections do not touch. WordPress puts a 28px block gap between them, so
+ * painting each one individually left a black stripe in every gap, including
+ * between the last section and the form band. Measured at 1366px: the sections
+ * ran 825-1450, 1478-2189, 2217-2304, 2332-, so three stripes.
+ *
+ * One layer starting at this section's bottom edge and running far past the end
+ * of the document covers all of it. Later sections still paint over it, because
+ * they come after this one in document order and this layer sits behind its own
+ * section's content, so `.csc-form-band` keeps its surface grey.
+ */
+.csc-dark-top .csc-integration::after,
+.page-thank-you .csc-ty-head::after {
+	top: 100%;
+	height: 10000px;
+}
+
+.csc-dark-top .csc-integration::before {
+	background: linear-gradient(to bottom, #000, var(--wp--preset--color--base));
+}
+
+.csc-dark-top .csc-integration::after {
+	background: var(--wp--preset--color--base);
+}
+
+/*
+ * Thank You: the same idea, fitted to a page with only two sections.
+ *
+ * There is no equivalent of the video section to fade across, and no export of
+ * the new Thank You top to measure, so this mirrors the landing page rather than
+ * reproducing artwork.
+ *
+ * The fade lives in the gap that already existed between the head section and
+ * "What happens next", which was `.csc-steps`' 6.5625rem top margin. Moving that
+ * space into this section's padding keeps the spacing identical to the pixel and
+ * gives the fade somewhere to happen that holds no text.
+ *
+ * That matters: fading anywhere else puts white type on a lightening background,
+ * or dark type on a darkening one. The steps content is untouched and stays on
+ * the surface grey.
+ */
+.page-thank-you .csc-ty-head {
+	padding-bottom: 6.5625rem;
+}
+
+.page-thank-you .csc-ty-head::before {
+	background: linear-gradient(
+		to bottom,
+		#000 calc(100% - 6.5625rem),
+		var(--wp--preset--color--surface) 100%
+	);
+}
+
+.page-thank-you .csc-ty-head::after {
+	background: var(--wp--preset--color--surface);
+}
+
+/*
+ * The space this section's padding now holds used to be this margin, so removing
+ * it keeps the gap between the two sections exactly as it was.
+ */
+.page-thank-you .csc-steps {
+	margin-block-start: 0;
+}
+
+/*
+ * White type on the Thank You head, matching the landing page.
+ *
+ * `.csc-ty-lead` needs naming because it sets ink explicitly, and the h1 because
+ * theme.json's `elements.heading` does. The red tick is left alone: brand red on
+ * black is still well clear of the contrast floor.
+ */
+.page-thank-you .csc-ty-head,
+.page-thank-you .csc-ty-head h1,
+.page-thank-you .csc-ty-lead,
+.page-thank-you .csc-ty-body {
+	color: var(--wp--preset--color--base);
+}
+
+/*
+ * Anchored on the mimecast baseline, which the design puts at y173.
+ *
+ * With the marks centred on a row as tall as the CrowdStrike mark, mimecast's
+ * box sits 11px below the row top and is 56px tall, so the padding works out at
+ * 173 - 67 = 106. That lands the CrowdStrike wordmark's baseline at y168.0
+ * against the design's y168.
+ */
+.csc-dark-top .csc-masthead {
+	padding-block-start: 106px;
+	background: transparent;
+}
+
+/*
+ * CrowdStrike is deliberately taller than mimecast here, 78px against 56px.
+ *
+ * The design matches the two marks on wordmark size, 37px against 39px, not on
+ * box height. Half of the white CrowdStrike file's height is swoosh, reaching
+ * above and below the letters, so equal boxes would leave CROWDSTRIKE reading at
+ * roughly half the size of mimecast. See the note in the lockup template part.
+ */
+.csc-dark-top .csc-lockup__mark--crowdstrike {
+	height: clamp(2.9375rem, 5.71vw, 78px);
+	/*
+	 * Baselines again, recomputed for this pair. The white file puts the
+	 * wordmark's baseline at 0.5742 of its box height, mimecast's is at its box
+	 * bottom, and centring the two leaves CrowdStrike 22.2px high. The design
+	 * draws them 5px apart, so the shift is 17.2px of 78, or 22.1%. Composited
+	 * from the shipped files, that comes out at 4.7px against the design's 5px.
+	 */
+	transform: translateY(22.1%);
+}
+
+.csc-dark-top .csc-lockup__mark--mimecast {
+	height: clamp(2.125rem, 4.1vw, 56px);
+}
+
+/* 4px wide and 51px tall in the design, and white rather than black. */
+.csc-dark-top .csc-lockup__rule {
+	width: 4px;
+	height: clamp(1.9375rem, 3.73vw, 51px);
+	background: var(--wp--preset--color--base);
+}
+
+/*
+ * Centred as a GROUP here, not on the rule.
+ *
+ * The rest of the build centres the rule on the page and lets the group sit
+ * where it must, which was right while the two marks were close in width. It is
+ * wrong now: CrowdStrike renders 435px wide against mimecast's 325px, so
+ * centring the rule throws the group about 55px left of the page centre.
+ *
+ * The design agrees. It puts the group's centre at x674 against a page centre of
+ * x683, and lets the rule fall 44px right of centre rather than the other way
+ * round.
+ *
+ * Flex also removes a real bug that the three column grid caused here. Equal
+ * `1fr` side columns worked out at 411px each, narrower than the 435px the
+ * CrowdStrike mark now needs, and `max-width: 100%` from the global image rule
+ * then squeezed it to 421px against a fixed 78px height. The mark was rendering
+ * 3% too narrow.
+ */
+.csc-dark-top .csc-lockup {
+	display: flex;
+	justify-content: center;
+	max-width: none;
+}
+
+/*
+ * White type over the dark zone, and only there.
+ *
+ * `.csc-hero` carries the headline and both paragraphs, `.csc-eyebrow` is the
+ * "SEE THE INTEGRATION IN ACTION" line above the video. Everything below that
+ * sits on white and is left alone. "Together." keeps its own brand red class.
+ *
+ * The h1 needs naming explicitly. theme.json sets `elements.heading` to ink, and
+ * that global rule beats an inherited colour, which is why the headline stayed
+ * black when only the section was recoloured. The eyebrow escaped it by carrying
+ * its own class.
+ */
+.csc-dark-top .csc-hero,
+.csc-dark-top .csc-hero h1,
+.csc-dark-top .csc-eyebrow {
+	color: var(--wp--preset--color--base);
+}
+
+/*
+ * Stacking, repeated for the landing page.
+ *
+ * The narrow-width block in section 3 cannot reach these. It sits ABOVE this
+ * section in the file, and every rule here matches it on specificity, so this
+ * section wins on order and the marks stayed side by side with a vertical
+ * divider while the rest of the lockup stacked. Found by measuring at 375px:
+ * the divider was still 4px by 31px and the baseline shift was still applied.
+ *
+ * `grid-template-columns` from that block is irrelevant here too, since this
+ * lockup is flex.
+ *
+ * The baseline shift goes entirely: stacked, there is no shared baseline left to
+ * correct for.
+ */
+@media (max-width: 30rem) {
+	.csc-dark-top .csc-lockup {
+		flex-direction: column;
+	}
+
+	.csc-dark-top .csc-lockup__mark--crowdstrike {
+		transform: none;
+	}
+
+	.csc-dark-top .csc-lockup__rule {
+		width: 4rem;
+		height: 3px;
+	}
+}
+
+/* ---------------------------------------------------------------------------
    4. Placeholders
 
    Nothing on either page is a placeholder any more, so the styles that made
@@ -621,45 +922,23 @@ video {
    designs/Thank You page.png at the 1920px export, divided by the 1.5 scale.
    --------------------------------------------------------------------------- */
 
-.page-thank-you {
-	background: var(--wp--preset--color--surface);
-}
-
 /*
- * The Thank You page draws a DIFFERENT lockup from the landing page, measured
- * from the current 1366px exports:
+ * The page background, the masthead and the lockup are NOT set here any more.
+ *
+ * All three moved to section 3B on 14 August 2026, when the client's dark top
+ * section arrived on this page as well as the landing page. What used to be here
+ * actively fought it: this section sits below 3B in the file and matched it on
+ * specificity, so a `background: surface` on the page would have painted over the
+ * black and the artwork, an 84px masthead padding would have overridden the
+ * measured 106px, and a 56px height on both marks would have flattened the 78/56
+ * pair the new design needs.
+ *
+ * For the record, the old lockup measurements, which no longer apply because the
+ * marks themselves changed:
  *
  *            CrowdStrike   mimecast   rule      band top
  *   landing  437 x 60      319 x 52   3 x 52    y121
  *   thankyou 437 x 61      342 x 56   3 x 129   y84
- *
- * CrowdStrike is the same on both. mimecast is larger here and the rule is
- * more than twice as tall. The three are centred on each other rather than
- * baseline aligned, which is how this page draws them.
- */
-.page-thank-you .csc-masthead {
-	padding-block-start: 84px;
-	background: transparent;
-}
-
-/*
- * The lockup is larger on this page, but the two marks still match each other.
- *
- * The Thank You mockup draws mimecast 6% smaller than the landing mockup does
- * while drawing CrowdStrike at the same size, which reads as an inconsistency in
- * the client's Canva file rather than an intention: 616x85 against 481x78 here,
- * 616x84 against 511x83 there. This follows the same call already made for the
- * rule above, one lockup that behaves the same on both pages, and keeps mimecast
- * at the 56px the design gives it.
- */
-.page-thank-you .csc-lockup__mark--crowdstrike,
-.page-thank-you .csc-lockup__mark--mimecast {
-	height: clamp(2.1rem, 4.1vw, 56px);
-}
-
-/*
- * The rule is deliberately NOT overridden here. The design makes it 129px on
- * this page against 52px on the landing page; one consistent rule is better.
  */
 
 /* Confirmation tick ------------------------------------------------------- */

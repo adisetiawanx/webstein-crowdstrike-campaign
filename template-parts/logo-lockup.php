@@ -34,25 +34,58 @@ defined( 'ABSPATH' ) || exit;
  * Two widths each. Serving only the 2x file meant phones downloading roughly
  * three times the pixels they could display. Issue #15.
  *
- * `w1x` is the mark's width at the 56px render height, so it doubles as the
- * `sizes` value. The two marks are different widths, so `sizes` is computed per
- * mark rather than shared. It was previously hard coded to 311px, which stopped
- * being true for CrowdStrike the moment its file changed.
+ * `w1x` is the mark's width at its own `render` height, so it doubles as the
+ * desktop `sizes` value, and the narrow-screen value is that scaled by
+ * `render_min / render`. Both are per mark rather than shared: the marks are
+ * different widths, and since the redesign they are different heights too.
+ * `sizes` was once hard coded to 311px, which stopped being true the moment a
+ * logo file changed. It is computed for that reason.
+ */
+/*
+ * The white marks, on both pages.
+ *
+ * The client redesigned the top section on 14 August 2026 with a black
+ * background, so the lockup is the white version of each mark. That went to the
+ * landing page first and to the Thank You page a few hours later, once the
+ * client confirmed its top section changed too, which is why this is one set
+ * again rather than one per page.
+ *
+ * The black marks are still in `assets/images`. Nothing references them now, and
+ * they are kept only because the top section has already changed once.
+ *
+ * Sizes are measured from `designs/FINAL CS Microsite Page Mockup.png`, which is
+ * 1366px wide, so one pixel there is one CSS pixel here. Taken from the
+ * DIFFERENCE between that export and the "Without Text Top" one, which isolates
+ * the lockup from the decorative artwork sitting behind it. Measuring the export
+ * on its own does not work: the artwork's white dots fall inside the mimecast
+ * mark and inflate it from 56px tall to 88px.
+ *
+ * CrowdStrike renders TALLER than mimecast, 78px against 56px, and that is
+ * deliberate. The design matches the two on WORDMARK size, 37px against 39px,
+ * not on box height. The white CrowdStrike file spends half its height on the
+ * swoosh, which reaches well above and below the letters, so equal boxes would
+ * leave CROWDSTRIKE reading at about half the size of mimecast.
  */
 $csc_logos = array(
 	array(
-		'slug'   => 'crowdstrike',
-		'alt'    => 'CrowdStrike',
-		'w1x'    => 408,
-		'w2x'    => 815,
-		'height' => 112,
+		'slug'       => 'crowdstrike',
+		'file'       => 'crowdstrike-logo-white',
+		'alt'        => 'CrowdStrike',
+		'w1x'        => 435,
+		'w2x'        => 870,
+		'height'     => 156,
+		'render'     => 78,
+		'render_min' => 47,
 	),
 	array(
-		'slug'   => 'mimecast',
-		'alt'    => 'Mimecast',
-		'w1x'    => 343,
-		'w2x'    => 685,
-		'height' => 112,
+		'slug'       => 'mimecast',
+		'file'       => 'mimecast-logo-white',
+		'alt'        => 'Mimecast',
+		'w1x'        => 325,
+		'w2x'        => 650,
+		'height'     => 112,
+		'render'     => 56,
+		'render_min' => 34,
 	),
 );
 
@@ -66,8 +99,8 @@ $csc_logos = array(
  */
 if ( ! function_exists( 'csc_render_logo' ) ) :
 	function csc_render_logo( array $logo ): void {
-		$base = CSC_URI . '/assets/images/' . $logo['slug'] . '-logo';
-		$file = CSC_DIR . '/assets/images/' . $logo['slug'] . '-logo.webp';
+		$base = CSC_URI . '/assets/images/' . $logo['file'];
+		$file = CSC_DIR . '/assets/images/' . $logo['file'] . '.webp';
 
 		/*
 		 * Cache bust on the file's own modification time.
@@ -84,7 +117,7 @@ if ( ! function_exists( 'csc_render_logo' ) ) :
 		class="csc-lockup__mark csc-lockup__mark--<?php echo esc_attr( $logo['slug'] ); ?>"
 		src="<?php echo esc_url( $base . '.webp' . $ver ); ?>"
 		srcset="<?php echo esc_attr( $base . '-1x.webp' . $ver . ' ' . $logo['w1x'] . 'w, ' . $base . '.webp' . $ver . ' ' . $logo['w2x'] . 'w' ); ?>"
-		sizes="<?php echo esc_attr( "(max-width: 30rem) " . round( $logo['w1x'] * 32 / 56 ) . "px, " . $logo['w1x'] . "px" ); ?>"
+		sizes="<?php echo esc_attr( '(max-width: 30rem) ' . round( $logo['w1x'] * $logo['render_min'] / $logo['render'] ) . 'px, ' . $logo['w1x'] . 'px' ); ?>"
 		width="<?php echo esc_attr( (string) $logo['w2x'] ); ?>"
 		height="<?php echo esc_attr( (string) $logo['height'] ); ?>"
 		alt="<?php echo esc_attr( $logo['alt'] ); ?>"

@@ -10,7 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CSC_VERSION', '0.1.4' );
+define( 'CSC_VERSION', '0.2.1' );
 define( 'CSC_DIR', get_template_directory() );
 define( 'CSC_URI', get_template_directory_uri() );
 
@@ -305,6 +305,18 @@ function csc_body_class( array $classes ): array {
 		if ( $post instanceof WP_Post && $post->post_name ) {
 			$classes[] = 'page-' . sanitize_html_class( $post->post_name );
 		}
+	}
+
+	/*
+	 * Both pages carry the dark top section the client asked for on 14 August
+	 * 2026, so the styling keys off one class rather than naming both pages in
+	 * every selector. Section 3B of theme.css is the whole of it.
+	 *
+	 * A class rather than a page test in the CSS because the two pages arrived at
+	 * it separately, hours apart, and a third could follow.
+	 */
+	if ( is_front_page() || is_page( 'thank-you' ) ) {
+		$classes[] = 'csc-dark-top';
 	}
 
 	return $classes;
