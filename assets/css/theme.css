@@ -386,14 +386,28 @@ video {
  * or dark type on a darkening one. The steps content is untouched and stays on
  * the surface grey.
  */
+/*
+ * Two separate lengths, because they are two separate things.
+ *
+ * `--csc-ty-black` is solid black carrying on below the copy. `--csc-ty-fade` is
+ * the dissolve after it. The padding holds both, so the section reserves exactly
+ * the space they need and nothing overlaps the copy above.
+ *
+ * They were one number to begin with, and lengthening it only moved the bottom of
+ * the fade: the black still stopped level with the last line of copy, which is
+ * what Adi was pointing at.
+ */
 .page-thank-you .csc-ty-head {
-	padding-bottom: 12rem;
+	--csc-ty-black: 10rem;
+	--csc-ty-fade: 12rem;
+
+	padding-bottom: calc(var(--csc-ty-black) + var(--csc-ty-fade));
 }
 
 .page-thank-you .csc-ty-head::before {
 	background: linear-gradient(
 		to bottom,
-		transparent calc(100% - 12rem),
+		transparent calc(100% - var(--csc-ty-fade)),
 		var(--wp--preset--color--surface) 100%
 	);
 }
