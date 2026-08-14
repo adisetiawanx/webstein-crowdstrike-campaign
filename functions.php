@@ -10,7 +10,22 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CSC_VERSION', '0.2.6' );
+/**
+ * One version number for the whole theme, read from the style.css header.
+ *
+ * It used to be hard coded here, and that caused a bug worth remembering. This
+ * constant cache busts the enqueued CSS and JS, but WordPress cache busts the
+ * theme screenshot on the STYLE HEADER version instead: see wp-admin/themes.php,
+ * which builds the image URL as `screenshot.png?ver=` plus the header version.
+ *
+ * So the header sat at 0.1.0 through ten bumps of this constant, the screenshot
+ * URL never changed, and Appearance > Themes kept serving the browser's cached
+ * copy of the old white design long after the file on disk was the dark one.
+ *
+ * Reading it from the header means there is one number to change, in style.css,
+ * and both the assets and the screenshot follow it.
+ */
+define( 'CSC_VERSION', wp_get_theme()->get( 'Version' ) );
 define( 'CSC_DIR', get_template_directory() );
 define( 'CSC_URI', get_template_directory_uri() );
 
