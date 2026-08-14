@@ -300,58 +300,58 @@ video {
 }
 
 .csc-dark-top .csc-integration,
+.csc-dark-top .csc-protection,
+.csc-dark-top .csc-cta,
 .page-thank-you .csc-ty-head {
 	position: relative;
 	/*
-	 * A stacking context, so the layers below cannot fall behind an ancestor's
+	 * A stacking context, so the layer below cannot fall behind an ancestor's
 	 * background instead of just behind this section's own content.
 	 */
 	z-index: 0;
 }
 
+/*
+ * Each layer covers its own section and the 28px block gaps either side of it.
+ *
+ * The gaps have to be covered by something, or the body's black shows through as
+ * a stripe between every pair of sections. Overlapping into them is free: the
+ * layers either side of a gap are the same colour, and where a light layer
+ * reaches back into the fade it only covers the gradient's near-white tail.
+ *
+ * An earlier version did this with one layer running 10000px past the end of the
+ * document instead. It looked right and it was badly wrong: an absolutely
+ * positioned box still contributes to scrollable overflow, so the document grew
+ * to 10871px against 2214px of content. Adi saw it as a very long white space
+ * below the page. Nothing here extends past the last section now.
+ */
 .csc-dark-top .csc-integration::before,
-.csc-dark-top .csc-integration::after,
-.page-thank-you .csc-ty-head::before,
-.page-thank-you .csc-ty-head::after {
+.csc-dark-top .csc-protection::before,
+.csc-dark-top .csc-cta::before,
+.page-thank-you .csc-ty-head::before {
 	content: "";
 	position: absolute;
+	top: calc(-1 * var(--wp--style--block-gap));
+	bottom: calc(-1 * var(--wp--style--block-gap));
 	left: 50%;
 	width: 100vw;
 	transform: translateX(-50%);
 	z-index: -1;
 }
 
-/* The fade itself, over the height of this section. */
+/* The fade must not overshoot its section, or it starts mid grey. */
 .csc-dark-top .csc-integration::before,
 .page-thank-you .csc-ty-head::before {
 	top: 0;
 	bottom: 0;
 }
 
-/*
- * Everything BELOW the fade, carried by one layer rather than per section.
- *
- * The sections do not touch. WordPress puts a 28px block gap between them, so
- * painting each one individually left a black stripe in every gap, including
- * between the last section and the form band. Measured at 1366px: the sections
- * ran 825-1450, 1478-2189, 2217-2304, 2332-, so three stripes.
- *
- * One layer starting at this section's bottom edge and running far past the end
- * of the document covers all of it. Later sections still paint over it, because
- * they come after this one in document order and this layer sits behind its own
- * section's content, so `.csc-form-band` keeps its surface grey.
- */
-.csc-dark-top .csc-integration::after,
-.page-thank-you .csc-ty-head::after {
-	top: 100%;
-	height: 10000px;
-}
-
 .csc-dark-top .csc-integration::before {
 	background: linear-gradient(to bottom, #000, var(--wp--preset--color--base));
 }
 
-.csc-dark-top .csc-integration::after {
+.csc-dark-top .csc-protection::before,
+.csc-dark-top .csc-cta::before {
 	background: var(--wp--preset--color--base);
 }
 
@@ -383,16 +383,17 @@ video {
 	);
 }
 
-.page-thank-you .csc-ty-head::after {
-	background: var(--wp--preset--color--surface);
-}
-
 /*
- * The space this section's padding now holds used to be this margin, so removing
- * it keeps the gap between the two sections exactly as it was.
+ * `.csc-steps` is alignfull, so it carries its own background and covers the rest
+ * of the page on its own. It needs to declare the surface grey now that the body
+ * behind it is black.
+ *
+ * The margin goes because that space moved into the head section's padding, where
+ * the fade happens, which keeps the gap between the two exactly as it was.
  */
 .page-thank-you .csc-steps {
 	margin-block-start: 0;
+	background: var(--wp--preset--color--surface);
 }
 
 /*
