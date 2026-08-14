@@ -346,8 +346,23 @@ video {
 	bottom: 0;
 }
 
+/*
+ * The fade starts TRANSPARENT, not black.
+ *
+ * The body is already black, so a fade that starts opaque repaints something
+ * that is there anyway, and in doing so it covers the artwork. On the Thank You
+ * page that was visible: its fade layer starts at the top of a section at y216,
+ * while the artwork scales to about 836px tall on a wide window, so the artwork
+ * was cut off in a hard horizontal line. Adi spotted it.
+ *
+ * The landing page only escaped it by luck. Its fade begins at y880, just below
+ * where the artwork happens to end.
+ *
+ * CSS gradients interpolate in premultiplied alpha, so `transparent` fades in
+ * cleanly here rather than passing through grey.
+ */
 .csc-dark-top .csc-integration::before {
-	background: linear-gradient(to bottom, #000, var(--wp--preset--color--base));
+	background: linear-gradient(to bottom, transparent, var(--wp--preset--color--base));
 }
 
 .csc-dark-top .csc-protection::before,
@@ -378,7 +393,7 @@ video {
 .page-thank-you .csc-ty-head::before {
 	background: linear-gradient(
 		to bottom,
-		#000 calc(100% - 6.5625rem),
+		transparent calc(100% - 6.5625rem),
 		var(--wp--preset--color--surface) 100%
 	);
 }
