@@ -77,15 +77,34 @@ $csc_logos = array(
 		'render'     => 78,
 		'render_min' => 47,
 	),
+	/*
+	 * mimecast is 55px, not the 56px the design draws, and not by accident.
+	 *
+	 * The client replaced this mark on 15 August 2026 with `mimecast_white.png`,
+	 * 3373x550 against the old file's 696x120. Far more resolution, but also a
+	 * different crop: 6.1327:1 where the old one was 5.8000:1, so the two cannot
+	 * both match the design's 325x56 box.
+	 *
+	 * What matters is the size of the LETTERS, not the box. Measured, the x-height
+	 * fills 0.7236 of the new box against 0.7083 of the old, so rendering the new
+	 * file at 56px would make the wordmark visibly bigger than the one Mika signed
+	 * off. Solving for the box that keeps the letters identical:
+	 *
+	 *   56 x 0.7083 / 0.7236 = 54.8  ->  55
+	 *
+	 * The box therefore comes out 337px wide against the design's 325px. That is
+	 * the mark being a different shape, not a sizing error, and the alternative is
+	 * letters 3% smaller than the approved lockup.
+	 */
 	array(
 		'slug'       => 'mimecast',
 		'file'       => 'mimecast-logo-white',
 		'alt'        => 'Mimecast',
-		'w1x'        => 325,
-		'w2x'        => 650,
-		'height'     => 112,
-		'render'     => 56,
-		'render_min' => 34,
+		'w1x'        => 337,
+		'w2x'        => 675,
+		'height'     => 110,
+		'render'     => 55,
+		'render_min' => 33,
 	),
 );
 

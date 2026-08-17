@@ -465,15 +465,19 @@ video {
 	/*
 	 * Baselines again, recomputed for this pair. The white file puts the
 	 * wordmark's baseline at 0.5742 of its box height, mimecast's is at its box
-	 * bottom, and centring the two leaves CrowdStrike 22.2px high. The design
-	 * draws them 5px apart, so the shift is 17.2px of 78, or 22.1%. Composited
-	 * from the shipped files, that comes out at 4.7px against the design's 5px.
+	 * bottom, and centring a 78px box against a 55px one leaves CrowdStrike
+	 * 21.7px high. The design draws them 5px apart, so the shift is 16.7px of 78,
+	 * or 21.4%. Composited from the shipped files, that lands on 5.00px.
+	 *
+	 * This was 22.1% while mimecast rendered at 56px. It has to move whenever
+	 * either box height does, which is why the working is written out.
 	 */
-	transform: translateY(22.1%);
+	transform: translateY(21.4%);
 }
 
+/* 55px rather than 56px: see the note in the lockup template part. */
 .csc-dark-top .csc-lockup__mark--mimecast {
-	height: clamp(2.125rem, 4.1vw, 56px);
+	height: clamp(2.0625rem, 4.03vw, 55px);
 }
 
 /* 4px wide and 51px tall in the design, and white rather than black. */
