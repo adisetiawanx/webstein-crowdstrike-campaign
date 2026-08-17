@@ -463,16 +463,28 @@ video {
 .csc-dark-top .csc-lockup__mark--crowdstrike {
 	height: clamp(2.9375rem, 5.71vw, 78px);
 	/*
-	 * Baselines again, recomputed for this pair. The white file puts the
-	 * wordmark's baseline at 0.5742 of its box height, mimecast's is at its box
-	 * bottom, and centring a 78px box against a 55px one leaves CrowdStrike
-	 * 21.7px high. The design draws them 5px apart, so the shift is 16.7px of 78,
-	 * or 21.4%. Composited from the shipped files, that lands on 5.00px.
+	 * The two baselines are EXACTLY level. No offset.
 	 *
-	 * This was 22.1% while mimecast rendered at 56px. It has to move whenever
-	 * either box height does, which is why the working is written out.
+	 * Every earlier version reproduced the 4 to 5px gap the Canva mockups draw
+	 * between the two baselines, on the reasoning that the design is the
+	 * reference. Mika drew a single line under the lockup on 15 August 2026 and
+	 * asked for pixel perfect, which settles it: that gap was Canva imprecision,
+	 * not intent. It was suspected as much when it was first measured, at 4.82% of
+	 * a mark's height, and reproduced anyway.
+	 *
+	 * The white file puts the wordmark's baseline at 0.5742 of its box height,
+	 * mimecast's is at its box bottom, and centring a 78px box against a 55px one
+	 * leaves CrowdStrike's 21.7px high, so the shift is that whole distance:
+	 * 21.7 / 78 = 27.8%.
+	 *
+	 * Solved against the shipped files rather than derived on paper, by compositing
+	 * at four times scale and bisecting for the value that puts the two ink bottoms
+	 * on the same row. 27.8% gives 0.00px. For comparison, the previous 21.4% gives
+	 * 5.00px, which is the gap Mika was pointing at.
+	 *
+	 * This has to be recomputed whenever either box height changes.
 	 */
-	transform: translateY(21.4%);
+	transform: translateY(27.8%);
 }
 
 /* 55px rather than 56px: see the note in the lockup template part. */
